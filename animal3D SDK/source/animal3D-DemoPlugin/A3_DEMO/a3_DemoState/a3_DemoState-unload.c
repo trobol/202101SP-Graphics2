@@ -35,6 +35,16 @@
 #include <stdio.h>
 
 
+// ****TMP
+#ifdef _WIN32
+#include <gl/glew.h>
+#include <Windows.h>
+#include <GL/GL.h>
+#else	// !_WIN32
+#include <OpenGL/gl3.h>
+#endif	// _WIN32
+
+
 //-----------------------------------------------------------------------------
 // UNLOADING
 // this is where the union array style comes in handy; don't need a single 
@@ -43,7 +53,7 @@
 // utility to unload geometry
 void a3demo_unloadGeometry(a3_DemoState* demoState)
 {
-	// ****TO-DO: 
+	// ****LATER: 
 
 }
 
@@ -51,13 +61,14 @@ void a3demo_unloadGeometry(a3_DemoState* demoState)
 void a3demo_unloadShaders(a3_DemoState* demoState)
 {
 	// ****TO-DO: 
+	//	-> implement "shutdown" from tutorial
 
 }
 
 // utility to unload textures
 void a3demo_unloadTextures(a3_DemoState* demoState)
 {
-	// ****TO-DO: 
+	// ****LATER: 
 
 }
 

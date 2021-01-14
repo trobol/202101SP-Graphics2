@@ -183,6 +183,10 @@ struct a3_DemoState
 
 	//-------------------------------------------------------------------------
 	// the end
+
+	// ****TO-DO: 
+	//	-> add data members, the graphics handles from tutorial
+
 };
 
 

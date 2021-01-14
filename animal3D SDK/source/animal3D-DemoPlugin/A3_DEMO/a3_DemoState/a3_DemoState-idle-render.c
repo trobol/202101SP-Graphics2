@@ -199,6 +199,7 @@ void a3demo_renderTest(a3_DemoState const* demoState, a3f64 const dt)
 	glViewport(-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth, demoState->frameHeight);
 
 	// ****TO-DO: render scene here
+	//	-> implement "render" from tutorial
 
 }
 
@@ -214,7 +215,7 @@ void a3demo_render(a3_DemoState const* demoState, a3f64 const dt)
 	a3demo_renderTest(demoState, dt);
 
 	// text
-	if (demoState->textInit)
+/*	if (demoState->textInit)
 	{
 		// amount to offset text as each line is rendered
 		a3f32 const textAlign = -0.98f;
@@ -259,7 +260,7 @@ void a3demo_render(a3_DemoState const* demoState, a3f64 const dt)
 				break;
 			}
 		}
-	}
+	}*/
 }
 
 

@@ -79,6 +79,16 @@
 #include <stdio.h>
 
 
+// ****TMP
+#ifdef _WIN32
+#include <gl/glew.h>
+#include <Windows.h>
+#include <GL/GL.h>
+#else	// !_WIN32
+#include <OpenGL/gl3.h>
+#endif	// _WIN32
+
+
 //-----------------------------------------------------------------------------
 // GENERAL UTILITIES
 
@@ -162,7 +172,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	// not streaming or stream doesn't exist
 	else if (!demoState->streaming || a3fileStreamOpenWrite(fileStream, geometryStream))
 	{
-		// ****TO-DO: 
+		// ****LATER: 
 		// create new raw data
 
 
@@ -174,7 +184,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	}
 
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// GPU data upload process: 
 	//	- determine storage requirements
 	//	- allocate buffer
@@ -182,7 +192,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	//	- create drawable and upload data
 	
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// release raw data when done
 
 
@@ -289,7 +299,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	printf("\n\n---------------- LOAD SHADERS STARTED  ---------------- \n");
 
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// load unique shaders: 
 	//	- load file contents
 	//	- create and compile shader object
@@ -301,23 +311,23 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	}
 
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// setup programs: 
 	//	- create program object
 	//	- attach shader objects
 
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// activate a primitive for validation
 	// makes sure the specified geometry can draw using programs
 	// good idea to activate the drawable with the most attributes
 
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// link and validate all programs
 
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// if linking fails, contingency plan goes here
 	// otherwise, release shaders
 	for (i = 0; i < numUniqueShaders; ++i)
@@ -327,7 +337,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	}
 
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// prepare uniforms algorithmically instead of manually for all programs
 	// get uniform and uniform block locations and set default values for all 
 	//	programs that have a uniform that will either never change or is
@@ -337,6 +347,10 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	printf("\n\n---------------- LOAD SHADERS FINISHED ---------------- \n");
 
 	//done
+
+	// ****TO-DO: 
+	//	-> implement "startup" from tutorial
+
 }
 
 
@@ -375,7 +389,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 	const a3ui32 numTextures = sizeof(textureList) / sizeof(a3_DemoStateTexture);
 	a3_DemoStateTexture* const textureListPtr = (a3_DemoStateTexture*)(&textureList), * texturePtr;
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// load all textures
 	for (i = 0; i < numTextures; ++i)
 	{
@@ -383,7 +397,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 
 	}
 
-	// ****TO-DO: 
+	// ****LATER: 
 	// change settings on a per-texture or per-type basis
 
 
