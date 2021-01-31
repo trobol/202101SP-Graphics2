@@ -24,6 +24,13 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> start with same items as "../passthru_transform_vs4x"
+//	-> declare texture coordinate attribute
+//		(hint: location is 8, use most appropriate type)
+//	-> declare texture coordinate varying
+//	-> assign attribute to varying
+
 layout (location = 0) in vec4 aPosition;
 
 flat out int vVertexID;

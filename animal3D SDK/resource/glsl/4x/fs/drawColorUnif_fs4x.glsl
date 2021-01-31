@@ -24,6 +24,11 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> declare color uniform
+//		(hint: correct name is used in codebase)
+//	-> assign uniform directly to output
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()

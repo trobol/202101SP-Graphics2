@@ -24,6 +24,11 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> declare model-view-projection matrix uniform
+//		(hint: correct name is used in codebase)
+//	-> transform input position by MVP matrix, store as output
+
 layout (location = 0) in vec4 aPosition;
 
 flat out int vVertexID;
