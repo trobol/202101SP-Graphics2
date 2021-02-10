@@ -24,7 +24,18 @@
 
 #version 450
 
+// ****TO-DO:
+// 1) Phong shading
+//	-> identical to outcome of last project
+// 2) shadow mapping
+//	-> declare shadow map texture
+//	-> declare shadow coordinate varying
+//	-> perform manual "perspective divide" on shadow coordinate
+//	-> perform "shadow test" (explained in class)
+
 layout (location = 0) out vec4 rtFragColor;
+
+uniform int uCount;
 
 void main()
 {

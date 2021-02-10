@@ -24,6 +24,12 @@
 
 #version 450
 
+// ****TO-DO:
+//	-> declare texture coordinate varying and input texture
+//	-> implement relative luminance function
+//	-> implement simple "tone mapping" such that the brightest areas of the 
+//		image are emphasized, and the darker areas get darker
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()

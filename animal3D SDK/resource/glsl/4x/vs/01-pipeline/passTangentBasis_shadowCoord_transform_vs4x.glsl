@@ -24,10 +24,30 @@
 
 #version 450
 
+// ****TO-DO:
+// 1) core transformation and lighting setup:
+//	-> declare data structures for projector and model matrix stacks
+//		(hint: copy and slightly modify demo object descriptors)
+//	-> declare uniform block for matrix data
+//		(hint: must match how it is uploaded in update function)
+//	-> use matrix data for current object to perform relevant transformations
+//		(hint: model-view-projection sequence may be split up like last time, 
+//		but per usual the final clip-space result is assigned to gl_Position)
+//	-> declare relevant attributes for lighting
+//	-> perform any additional transformations and write varyings for lighting
+// 2) shadow mapping
+//	-> using the above setup, perform additional transformation to generate a 
+//		"shadow coordinate", which is a "biased clip-space" coordinate from 
+//		the light's point of view
+//		(hint: transformation sequence is model-view-projection-bias)
+//	-> declare and write varying for shadow coordinate
+
 layout (location = 0) in vec4 aPosition;
 
 flat out int vVertexID;
 flat out int vInstanceID;
+
+uniform int uIndex;
 
 void main()
 {

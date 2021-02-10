@@ -24,6 +24,12 @@
 
 #version 450
 
+// ****TO-DO:
+//	-> declare texture coordinate varying and input texture
+//	-> declare sampling axis uniform (see render code for clue)
+//	-> declare Gaussian blur function that samples along one axis
+//		(hint: the efficiency of this is described in class)
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()

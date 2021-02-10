@@ -24,6 +24,11 @@
 
 #version 450
 
+// ****TO-DO:
+//	-> declare texture coordinate varying and set of input textures
+//	-> implement some sort of blending algorithm that highlights bright areas
+//		(hint: research some Photoshop blend modes)
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()
