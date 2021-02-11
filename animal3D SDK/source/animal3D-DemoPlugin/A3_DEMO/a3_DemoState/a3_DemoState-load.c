@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_loading.c/.cpp
 	Demo state function implementations.
 
@@ -35,7 +35,7 @@
 
 // **WARNING: FOR TESTING/COMPARISON ONLY, DO NOT USE IN DELIVERABLE BUILDS**
 // uncomment this to allow shader decoding (if available)
-#define A3_USER_ENABLE_SHADER_DECODING
+//#define A3_USER_ENABLE_SHADER_DECODING
 
 
 //-----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ a3real4x4r a3demo_setAtlasTransform_internal(a3real4x4p m_out,
 
 
 // initialize dummy drawable
-inline void a3demo_initDummyDrawable_internal(a3_DemoState *demoState)
+inline void a3demo_initDummyDrawable_internal(a3_DemoState* demoState)
 {
 	// dummy drawable for point drawing: copy any of the existing ones, 
 	//	set vertex count to 1 and primitive to points (0x0000)
@@ -126,12 +126,12 @@ inline void a3demo_initDummyDrawable_internal(a3_DemoState *demoState)
 // LOADING
 
 // utility to load geometry
-void a3demo_loadGeometry(a3_DemoState *demoState)
+void a3demo_loadGeometry(a3_DemoState* demoState)
 {
 	// tmp descriptor for loaded model
 	typedef struct a3_TAG_DEMOSTATELOADEDMODEL {
-		const a3byte *modelFilePath;
-		const a3real *transform;
+		const a3byte* modelFilePath;
+		const a3real* transform;
 	} a3_DemoStateLoadedModel;
 
 	// static model transformations
@@ -156,7 +156,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 	// file streaming (if requested)
 	a3_FileStream fileStream[1] = { 0 };
-	const a3byte *const geometryStream = "./data/gpro_base_geom.dat";
+	const a3byte* const geometryStream = "./data/gpro_base_geom.dat";
 
 
 	// procedural scene objects
@@ -190,7 +190,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	//	- allocate buffer
 	//	- create vertex arrays using unique formats
 	//	- create drawable and upload data
-	
+
 
 	// ****LATER: 
 	// release raw data when done
@@ -202,7 +202,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 
 // utility to load shaders
-void a3demo_loadShaders(a3_DemoState *demoState)
+void a3demo_loadShaders(a3_DemoState* demoState)
 {
 	// structure to help with shader management
 	typedef struct a3_TAG_DEMOSTATESHADER {
@@ -280,19 +280,19 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			{ { "shdr-gs:draw-tb",						2,{ A3_DEMO_GS"00-common/e/drawTangentBasis_gs4x.glsl",
 															A3_DEMO_GS"00-common/e/utilCommon_gs4x.glsl",} } },
 
-			// fs
-			// base
-			{ { "shdr-fs:draw-col-unif",				1,{ A3_DEMO_FS"e/drawColorUnif_fs4x.glsl" } } },
-			{ { "shdr-fs:draw-col-attr",				1,{ A3_DEMO_FS"e/drawColorAttrib_fs4x.glsl" } } },
-			// 00-common
-			{ { "shdr-fs:draw-tex",						1,{ A3_DEMO_FS"00-common/e/drawTexture_fs4x.glsl" } } },
-			{ { "shdr-fs:draw-Lambert",					2,{ A3_DEMO_FS"00-common/e/drawLambert_fs4x.glsl",
-															A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
-			{ { "shdr-fs:draw-Phong",					2,{ A3_DEMO_FS"00-common/e/drawPhong_fs4x.glsl",
-															A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
-		}
+															// fs
+															// base
+															{ { "shdr-fs:draw-col-unif",				1,{ A3_DEMO_FS"e/drawColorUnif_fs4x.glsl" } } },
+															{ { "shdr-fs:draw-col-attr",				1,{ A3_DEMO_FS"e/drawColorAttrib_fs4x.glsl" } } },
+															// 00-common
+															{ { "shdr-fs:draw-tex",						1,{ A3_DEMO_FS"00-common/e/drawTexture_fs4x.glsl" } } },
+															{ { "shdr-fs:draw-Lambert",					2,{ A3_DEMO_FS"00-common/e/drawLambert_fs4x.glsl",
+																											A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
+															{ { "shdr-fs:draw-Phong",					2,{ A3_DEMO_FS"00-common/e/drawPhong_fs4x.glsl",
+																											A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
+														}
 	};
-	a3_DemoStateShader *const shaderListPtr = (a3_DemoStateShader *)(&shaderList), *shaderPtr;
+	a3_DemoStateShader* const shaderListPtr = (a3_DemoStateShader*)(&shaderList), * shaderPtr;
 	const a3ui32 numUniqueShaders = sizeof(shaderList) / sizeof(a3_DemoStateShader);
 
 
@@ -351,12 +351,68 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	// ****TO-DO: 
 	//	-> implement "startup" from tutorial
 
+	// LOADING SHADER PROGRAM
+	GLuint vertex_shader;
+	GLuint fragment_shader;
+	GLuint program;
+	// Source code for vertex shader
+	static const GLchar* vertex_shader_source[] =
+	{
+	"#version 450 core \n"
+	" \n"
+	"void main(void) \n"
+	"{ \n"
+	"const vec4 vertices[3] = vec4[3](vec4(-0.25, -0.25, 0.5, 1.0), \n"
+	"vec4(0.25, -0.25, 0.5, 1.0), \n"
+	"vec4(0.25, 0.25, 0.5, 1.0)); \n"
+	" \n"
+	"gl_Position = vertices[gl_VertexID]; \n"
+	"} \n"
+	};
+	// Source code for fragment shader
+	static const GLchar* fragment_shader_source[] =
+	{
+	"#version 450 core \n"
+	" \n"
+	"out vec4 color; \n"
+	" \n"
+	"void main(void) \n"
+	"{ \n"
+	" color = vec4(0.0, 0.8, 1.0, 1.0); \n"
+	"} \n"
+	};
+	// Create and compile vertex shader
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertex_shader, 1, vertex_shader_source, NULL);
+	glCompileShader(vertex_shader);
+	// Create and compile fragment shader
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragment_shader, 1, fragment_shader_source, NULL);
+	glCompileShader(fragment_shader);
+	// Create program, attach shaders to it, and link it
+	program = glCreateProgram();
+	glAttachShader(program, vertex_shader);
+	glAttachShader(program, fragment_shader);
+	glLinkProgram(program);
+	// Delete the shaders as the program has them now
+	glDeleteShader(vertex_shader);
+	glDeleteShader(fragment_shader);
+
+	demoState->rendering_program = program;
+
+	// build vertex array
+	glCreateVertexArrays(1, &demoState->vertex_array_object);
+	glBindVertexArray(demoState->vertex_array_object);
+
+
+
+
 }
 
 
 // utility to load textures
 void a3demo_loadTextures(a3_DemoState* demoState)
-{	
+{
 	// indexing
 	a3ui32 i;
 

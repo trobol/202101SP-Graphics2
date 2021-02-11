@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState.h
 	Demo state interface and programmer function declarations.
 
@@ -86,7 +86,7 @@ enum a3_DemoState_ObjectMaxCount
 	demoStateMaxCount_timer = 1,
 };
 
-	
+
 //-----------------------------------------------------------------------------
 
 // callback types
@@ -186,7 +186,8 @@ struct a3_DemoState
 
 	// ****TO-DO: 
 	//	-> add data members, the graphics handles from tutorial
-
+	a3ui32 rendering_program;
+	a3ui32 vertex_array_object;
 };
 
 

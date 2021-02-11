@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_unloading.c/.cpp
 	Demo state function implementations.
 
@@ -62,6 +62,10 @@ void a3demo_unloadShaders(a3_DemoState* demoState)
 {
 	// ****TO-DO: 
 	//	-> implement "shutdown" from tutorial
+
+	glDeleteVertexArrays(1, &demoState->vertex_array_object);
+	glDeleteProgram(demoState->rendering_program);
+	glDeleteVertexArrays(1, &demoState->vertex_array_object);
 
 }
 

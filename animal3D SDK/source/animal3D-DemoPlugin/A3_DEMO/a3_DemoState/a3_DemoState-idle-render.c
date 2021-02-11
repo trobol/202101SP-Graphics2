@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_idle-render.c/.cpp
 	Demo state function implementations.
 
@@ -42,6 +42,8 @@
 #include <OpenGL/gl3.h>
 #endif	// _WIN32
 
+
+#include <math.h>
 
 //-----------------------------------------------------------------------------
 // RENDER TEXT
@@ -200,6 +202,18 @@ void a3demo_renderTest(a3_DemoState const* demoState, a3f64 const dt)
 
 	// ****TO-DO: render scene here
 	//	-> implement "render" from tutorial
+	const float color[] = {
+		cosf((float)demoState->dt_timer_tot),
+		sinf((float)demoState->dt_timer_tot),
+		0.0f,
+		1.0f
+	};
+
+	glClearBufferfv(GL_COLOR, 0, color);
+
+	glUseProgram(demoState->rendering_program);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 }
 
