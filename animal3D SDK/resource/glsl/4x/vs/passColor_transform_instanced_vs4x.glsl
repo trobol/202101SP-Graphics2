@@ -32,8 +32,12 @@ layout (location = 0) in vec4 aPosition;
 flat out int vVertexID;
 flat out int vInstanceID;
 
+out vec4 vColor;
+
 void main()
 {
+	
+	vColor = vec4(0.0, 1.0, 0.0, 1.0);
 	// DUMMY OUTPUT: directly assign input position to output position
 	gl_Position = aPosition;
 

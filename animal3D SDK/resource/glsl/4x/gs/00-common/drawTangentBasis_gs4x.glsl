@@ -32,7 +32,10 @@ layout (triangles) in;
 
 layout (line_strip, max_vertices = MAX_VERTICES) out;
 
+uniform vec4 uColor;
+
+out vec4 vColor;
 void main()
 {
-	
+	vColor = uColor;
 }
