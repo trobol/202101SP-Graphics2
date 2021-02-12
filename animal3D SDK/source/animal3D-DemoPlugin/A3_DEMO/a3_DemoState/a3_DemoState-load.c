@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_loading.c/.cpp
 	Demo state function implementations.
 
@@ -101,16 +101,16 @@ a3real4x4r a3demo_setAtlasTransform_internal(a3real4x4p m_out,
 
 
 // initialize dummy drawable
-inline void a3demo_initDummyDrawable_internal(a3_DemoState *demoState)
+inline void a3demo_initDummyDrawable_internal(a3_DemoState* demoState)
 {
 	// ****TO-DO: 
 	//	-> uncomment
-/*	// dummy drawable for point drawing: copy any of the existing ones, 
+	// dummy drawable for point drawing: copy any of the existing ones,
 	//	set vertex count to 1 and primitive to points (0x0000)
 	// DO NOT RELEASE THIS DRAWABLE; it is a managed stand-in!!!
 	*demoState->dummyDrawable = *demoState->draw_grid;
 	demoState->dummyDrawable->primitive = 0;
-	demoState->dummyDrawable->count = 1;*/
+	demoState->dummyDrawable->count = 1;
 }
 
 
@@ -150,12 +150,12 @@ inline void a3demo_initDummyDrawable_internal(a3_DemoState *demoState)
 // LOADING
 
 // utility to load geometry
-void a3demo_loadGeometry(a3_DemoState *demoState)
+void a3demo_loadGeometry(a3_DemoState* demoState)
 {
 	// tmp descriptor for loaded model
 	typedef struct a3_TAG_DEMOSTATELOADEDMODEL {
-		const a3byte *modelFilePath;
-		const a3real *transform;
+		const a3byte* modelFilePath;
+		const a3real* transform;
 		a3_ModelLoaderFlag flag;
 	} a3_DemoStateLoadedModel;
 
@@ -174,9 +174,9 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	};
 
 	// pointer to shared vbo/ibo
-	a3_VertexBuffer *vbo_ibo = 0;
-	a3_VertexArrayDescriptor *vao = 0;
-	a3_VertexDrawable *currentDrawable = 0;
+	a3_VertexBuffer* vbo_ibo = 0;
+	a3_VertexArrayDescriptor* vao = 0;
+	a3_VertexDrawable* currentDrawable = 0;
 	a3ui32 sharedVertexStorage = 0, sharedIndexStorage = 0;
 	a3ui32 numVerts = 0;
 	a3ui32 i;
@@ -184,7 +184,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 	// file streaming (if requested)
 	a3_FileStream fileStream[1] = { 0 };
-	const a3byte *const geometryStream = "./data/gpro_base_geom.dat";
+	const a3byte* const geometryStream = "./data/gpro_base_geom.dat";
 
 	// geometry data
 	a3_GeometryData displayShapesData[2] = { 0 };
@@ -196,7 +196,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 	// common index format
 	a3_IndexFormatDescriptor sceneCommonIndexFormat[1] = { 0 };
-	a3ui32 bufferOffset, *const bufferOffsetPtr = &bufferOffset;
+	a3ui32 bufferOffset, * const bufferOffsetPtr = &bufferOffset;
 
 
 	// procedural scene objects
@@ -303,29 +303,29 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 	// ****TO-DO: 
 	//	-> uncomment buffer creation
-/*	// create shared buffer
+	// create shared buffer
 	vbo_ibo = demoState->vbo_staticSceneObjectDrawBuffer;
 	a3bufferCreateSplit(vbo_ibo, "vbo/ibo:scene", a3buffer_vertex, sharedVertexStorage, sharedIndexStorage, 0, 0);
-	sharedVertexStorage = 0;*/
+	sharedVertexStorage = 0;
 
 
 	// ****TO-DO: 
 	//	-> uncomment vertex array and drawable initialization for position/color format descriptor
-/*	// create vertex formats and drawables
+	// create vertex formats and drawables
 	// axes: position and color
 	vao = demoState->vao_position_color;
 	a3geometryGenerateVertexArray(vao, "vao:pos+col", displayShapesData + 0, vbo_ibo, sharedVertexStorage);
 	currentDrawable = demoState->draw_axes;
-	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);*/
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 
 	// ****TO-DO: 
 	//	-> uncomment vertex array and drawable initialization for position-only format descriptor
-/*	// grid: position attribute only
+	// grid: position attribute only
 	// overlay objects are also just position
 	vao = demoState->vao_position;
 	a3geometryGenerateVertexArray(vao, "vao:pos", displayShapesData + 1, vbo_ibo, sharedVertexStorage);
 	currentDrawable = demoState->draw_grid;
-	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 1, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);*/
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 1, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 
 	// ****TO-DO: 
 	//	-> uncomment vertex array initialization for position/normal/texcoord format descriptor 
@@ -333,21 +333,35 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	//	-> time to take the wheel: implement the rest of the procedural shape drawables
 	//		-> use the above examples and setup process to help you know which shape date goes 
 	//			with which drawable
-/*	// models
+	// models
 	vao = demoState->vao_position_normal_texcoord;
 	a3geometryGenerateVertexArray(vao, "vao:pos+nrm+tc", proceduralShapesData + 0, vbo_ibo, sharedVertexStorage);
 	currentDrawable = demoState->draw_unit_plane_z;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 	currentDrawable = demoState->draw_unit_box;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 1, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
-	//...*/
+	//...
+	currentDrawable = demoState->draw_unit_sphere;
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 2, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+	currentDrawable = demoState->draw_unit_cylinder;
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 3, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+	currentDrawable = demoState->draw_unit_capsule;
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 4, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+	currentDrawable = demoState->draw_unit_torus;
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 5, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+
+	currentDrawable = demoState->draw_unit_cone;
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 6, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+
 
 	// ****TO-DO: 
 	//	-> implement the remaining vertex array format from scratch
 	//		-> the teapot is the only drawable that uses it; use the above examples to guide you
-/*	vao = demoState->vao_tangentbasis_texcoord;
-	//...*/
-
+	vao = demoState->vao_tangentbasis_texcoord;
+	//...
+	a3geometryGenerateVertexArray(vao, "vao:tan+texcoord", loadedModelsData + 0, vbo_ibo, sharedVertexStorage);
+	currentDrawable = demoState->draw_teapot;
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, loadedModelsData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 
 	// release data when done
 	for (i = 0; i < displayShapesCount; ++i)
@@ -364,7 +378,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 
 // utility to load shaders
-void a3demo_loadShaders(a3_DemoState *demoState)
+void a3demo_loadShaders(a3_DemoState* demoState)
 {
 	// structure to help with shader management
 	typedef struct a3_TAG_DEMOSTATESHADER {
@@ -377,7 +391,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	} a3_DemoStateShader;
 
 	// direct to demo programs
-	a3_DemoStateShaderProgram *currentDemoProg = 0;
+	a3_DemoStateShaderProgram* currentDemoProg = 0;
 	a3i32 flag;
 	a3ui32 i;
 
@@ -440,33 +454,32 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// vs
 			// base
 			{ { { 0 },	"shdr-vs:passthru-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_vs4x.glsl" } } },// ****DECODE
-			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"e/passColor_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"e/passthru_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"e/passColor_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_instanced_vs4x.glsl" } } },
 			// 00-common
 			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/passTexcoord_transform_vs4x.glsl" } } },// ****DECODE
 			{ { { 0 },	"shdr-vs:pass-tb-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/passTangentBasis_transform_vs4x.glsl" } } },// ****DECODE
-			{ { { 0 },	"shdr-vs:pass-tex-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/e/passTexcoord_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-tb-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/e/passTangentBasis_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-tex-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/passTexcoord_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-tb-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/passTangentBasis_transform_instanced_vs4x.glsl" } } },
 
 			// gs
 			// 00-common
-			{ { { 0 },	"shdr-gs:draw-tb",					a3shader_geometry,	2,{ A3_DEMO_GS"00-common/e/drawTangentBasis_gs4x.glsl",
-																					A3_DEMO_GS"00-common/e/utilCommon_gs4x.glsl",} } },
+			{ { { 0 },	"shdr-gs:draw-tb",					a3shader_geometry,	2,{ A3_DEMO_GS"00-common/drawTangentBasis_gs4x.glsl", A3_DEMO_GS"00-common/utilCommon_gs4x.glsl",} } },
 
 			// fs
 			// base
 			{ { { 0 },	"shdr-fs:draw-col-unif",			a3shader_fragment,	1,{ A3_DEMO_FS"drawColorUnif_fs4x.glsl" } } },// ****DECODE
-			{ { { 0 },	"shdr-fs:draw-col-attr",			a3shader_fragment,	1,{ A3_DEMO_FS"e/drawColorAttrib_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-col-attr",			a3shader_fragment,	1,{ A3_DEMO_FS"drawColorAttrib_fs4x.glsl" } } },
 			// 00-common
 			{ { { 0 },	"shdr-fs:draw-tex",					a3shader_fragment,	1,{ A3_DEMO_FS"00-common/drawTexture_fs4x.glsl" } } },// ****DECODE
 			{ { { 0 },	"shdr-fs:draw-Lambert",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/drawLambert_fs4x.glsl",// ****DECODE
 																					A3_DEMO_FS"00-common/utilCommon_fs4x.glsl",} } },// ****DECODE
 			{ { { 0 },	"shdr-fs:draw-Phong",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/drawPhong_fs4x.glsl",// ****DECODE
 																					A3_DEMO_FS"00-common/utilCommon_fs4x.glsl",} } },// ****DECODE
-		}
+																				}
 	};
-	a3_DemoStateShader *const shaderListPtr = (a3_DemoStateShader *)(&shaderList), *shaderPtr;
+	a3_DemoStateShader* const shaderListPtr = (a3_DemoStateShader*)(&shaderList), * shaderPtr;
 	const a3ui32 numUniqueShaders = sizeof(shaderList) / sizeof(a3_DemoStateShader);
 
 
@@ -494,7 +507,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 
 	// ****TO-DO: 
 	//	-> uncomment base program setup
-/*	// base programs: 
+	// base programs:
 	// transform-only program
 	currentDemoProg = demoState->prog_transform;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:transform");
@@ -534,24 +547,35 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tb-inst");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTangentBasis_gs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);*/
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
 
 	// ****TO-DO: 
 	//	-> set up missing shader programs, using hints above: 
 	//		-> texturing, Lambert and Phong
-/*	// 00-common programs: 
+	// 00-common programs:
 	// texturing
 	currentDemoProg = demoState->prog_drawTexture;
 	//...
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex");
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_fs->shader);
+
 	// Lambert
 	//...
+	currentDemoProg = demoState->prog_drawLambert;
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Lambert");
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLambert_fs->shader);
 	// Phong
-	//...*/
-
+	//...
+	currentDemoProg = demoState->prog_drawPhong;
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong");
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLambert_fs->shader);
 
 	// ****TO-DO: 
 	//	-> uncomment program linking and validation
-/*	// activate a primitive for validation
+	// activate a primitive for validation
 	// makes sure the specified geometry can draw using programs
 	// good idea to activate the drawable with the most attributes
 	a3vertexDrawableActivate(demoState->draw_axes);
@@ -567,7 +591,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 		flag = a3shaderProgramValidate(currentDemoProg->program);
 		if (flag == 0)
 			printf("\n ^^^^ PROGRAM %u '%s' FAILED TO VALIDATE \n\n", i, currentDemoProg->program->handle->name);
-	}*/
+	}
 
 	// if linking fails, contingency plan goes here
 	// otherwise, release shaders
@@ -580,8 +604,8 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 
 	// ****TO-DO: 
 	//	-> uncomment uniform setup and default value assignment
-/*	// prepare uniforms algorithmically instead of manually for all programs
-	// get uniform and uniform block locations and set default values for all 
+	// prepare uniforms algorithmically instead of manually for all programs
+	// get uniform and uniform block locations and set default values for all
 	//	programs that have a uniform that will either never change or is
 	//	consistent for all programs
 	for (i = 0; i < demoStateMaxCount_shaderProgram; ++i)
@@ -634,10 +658,14 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 		a3demo_setUniformDefaultBlock(currentDemoProg, ubTransformMVP, 0);
 		a3demo_setUniformDefaultBlock(currentDemoProg, ubTransformMVPB, 1);
 
-		// ****TO-DO: 
+		// ****TO-DO:
 		//	-> set lighting uniform and block handles and defaults
 
-	}*/
+		// I know this only sets the first element but I couldnt figure out a way to 
+		// initilize the full array with a3
+		a3demo_setUniformDefaultVec4(currentDemoProg, uLights_pos, a3vec4_one.v);
+		a3demo_setUniformDefaultFloat(currentDemoProg, uLights_radius, 0);
+	}
 
 
 	// ****LATER
@@ -654,10 +682,10 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 
 // utility to load textures
 void a3demo_loadTextures(a3_DemoState* demoState)
-{	
+{
 	// ****TO-DO: 
 	//	-> uncomment texture loading
-/*	// indexing
+	// indexing
 	a3_Texture* tex;
 	a3ui32 i;
 
@@ -698,11 +726,11 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 		a3textureCreateFromFile(texturePtr->texture, texturePtr->textureName, texturePtr->filePath);
 		a3textureActivate(texturePtr->texture, a3tex_unit00);
 		a3textureDefaultSettings();
-	}*/
+	}
 
 	// ****TO-DO: 
 	//	-> uncomment texture configuration
-/*	// change settings on a per-texture or per-type basis
+	// change settings on a per-texture or per-type basis
 	tex = demoState->texture;
 	// skyboxes
 	for (i = 0; i < 2; ++i, ++tex)
@@ -715,7 +743,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 	{
 		a3textureActivate(tex, a3tex_unit00);
 		a3textureChangeRepeatMode(a3tex_repeatClamp, a3tex_repeatClamp);	// clamp both axes
-	}*/
+	}
 
 
 	// done
@@ -734,7 +762,7 @@ void a3demo_loadFramebuffers(a3_DemoState* demoState)
 //-----------------------------------------------------------------------------
 
 // internal utility for refreshing drawable
-inline void a3_refreshDrawable_internal(a3_VertexDrawable *drawable, a3_VertexArrayDescriptor *vertexArray, a3_IndexBuffer *indexBuffer)
+inline void a3_refreshDrawable_internal(a3_VertexDrawable* drawable, a3_VertexArrayDescriptor* vertexArray, a3_IndexBuffer* indexBuffer)
 {
 	drawable->vertexArray = vertexArray;
 	if (drawable->indexType)
@@ -750,7 +778,7 @@ void a3demo_loadValidate(a3_DemoState* demoState)
 {
 	// ****TO-DO: 
 	//	-> uncomment
-/*	a3_BufferObject* currentBuff = demoState->drawDataBuffer,
+	a3_BufferObject* currentBuff = demoState->drawDataBuffer,
 		* const endBuff = currentBuff + demoStateMaxCount_drawDataBuffer;
 	a3_VertexArrayDescriptor* currentVAO = demoState->vertexArray,
 		* const endVAO = currentVAO + demoStateMaxCount_vertexArray;
@@ -792,7 +820,7 @@ void a3demo_loadValidate(a3_DemoState* demoState)
 
 	currentVAO = demoState->vao_tangentbasis_texcoord;
 	currentVAO->vertexBuffer = currentBuff;
-	a3_refreshDrawable_internal(demoState->draw_teapot, currentVAO, currentBuff);*/
+	a3_refreshDrawable_internal(demoState->draw_teapot, currentVAO, currentBuff);
 
 	a3demo_initDummyDrawable_internal(demoState);
 }

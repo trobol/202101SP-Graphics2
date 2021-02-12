@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoMode0_Intro-idle-update.c
 	Demo mode implementations: animation scene.
 
@@ -75,7 +75,25 @@ void a3intro_update_scene(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode,
 
 	// ****TO-DO: 
 	//	-> update the remaining scene objects and their matrix stacks
+	a3demo_updateSceneObject(demoMode->obj_teapot, 0);
+	a3demo_updateSceneObjectStack(demoMode->obj_teapot, projector);
 
+	a3demo_updateSceneObject(demoMode->obj_cylinder, 0);
+	a3demo_updateSceneObjectStack(demoMode->obj_cylinder, projector);
+
+
+	a3demo_updateSceneObject(demoMode->obj_capsule, 0);
+	a3demo_updateSceneObjectStack(demoMode->obj_capsule, projector);
+
+	a3demo_updateSceneObject(demoMode->obj_torus, 0);
+	a3demo_updateSceneObjectStack(demoMode->obj_torus, projector);
+
+
+	a3demo_updateSceneObject(demoMode->obj_cone, 0);
+	a3demo_updateSceneObjectStack(demoMode->obj_cone, projector);
+
+	a3demo_updateSceneObject(demoMode->obj_ground, 0);
+	a3demo_updateSceneObjectStack(demoMode->obj_ground, projector);
 }
 
 void a3intro_update(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode, a3f64 const dt)

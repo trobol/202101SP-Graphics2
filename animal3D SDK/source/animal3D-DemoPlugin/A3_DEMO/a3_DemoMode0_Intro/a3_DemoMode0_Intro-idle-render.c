@@ -129,7 +129,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// ****TO-DO: 
 	//	-> uncomment graphics object arrays
-/*	// temp drawable pointers
+	// temp drawable pointers
 	const a3_VertexDrawable* drawable[] = {
 		0,								// root
 		0,								// camera
@@ -163,7 +163,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 		demoState->prog_drawTexture,
 		demoState->prog_drawLambert,
 		demoState->prog_drawPhong,
-	};*/
+	};
 
 	// target info
 	a3_DemoMode0_Intro_RenderMode const renderMode = demoMode->renderMode;
@@ -193,7 +193,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// ****TO-DO: 
 	//	-> uncomment skybox or solid clear
-/*	// clear buffers
+	// clear buffers
 	if (demoState->displaySkybox)
 	{
 		// skybox clear: just draw skybox
@@ -209,7 +209,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	{
 		// full clear
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}*/
+	}
 
 	// stencil test
 	//if (demoState->stencilTest)
@@ -217,9 +217,9 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// ****TO-DO: 
 	//	-> uncomment shader program activation for current mode
-/*	// select program based on settings
+	// select program based on settings
 	currentDemoProgram = renderProgram[renderMode];
-	a3shaderProgramActivate(currentDemoProgram->program);*/
+	a3shaderProgramActivate(currentDemoProgram->program);
 
 	// send shared data: 
 	//	- projection matrix
@@ -235,7 +235,21 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// ****TO-DO: 
 	//	-> send lighting uniforms and bind blocks where appropriate
+	a3vec4 lightPositions[introMaxCount_pointLight];					// position in rendering target space
+	a3vec4 color[introMaxCount_pointLight];						// RGB color with padding
+	a3real lightRadii[introMaxCount_pointLight];						// radius (distance of effect from center)
+	a3real radiusSq[introMaxCount_pointLight];					// radius squared (if needed)
+	a3real lightRadiiInv[introMaxCount_pointLight];					// radius inverse (attenuation factor)
+	a3real lightRadiiInvSq[introMaxCount_pointLight];					// radius inverse squared (attenuation factor)
 
+	for (int i = 0; i < introMaxCount_pointLight; i++) {
+		lightPositions[i] = demoMode->pointLightData[i].position;
+		color[i] = demoMode->pointLightData[i].color;
+		lightRadii[i] = demoMode->pointLightData[i].radius;
+		radiusSq[i] = demoMode->pointLightData[i].radiusSq;
+		lightRadiiInv[i] = demoMode->pointLightData[i].radiusInv;
+		lightRadiiInvSq[i] = demoMode->pointLightData[i].radiusInvSq;
+	}
 
 	// select pipeline algorithm
 	glDisable(GL_BLEND);
@@ -250,37 +264,51 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 		{
 		case intro_renderModePhong:
 			// activate specular map, fall through to Lambert
+
 			// ****TO-DO: 
 			//	-> uncomment texture activation
-		/*	a3textureActivate(texture_dm[j], a3tex_unit01);*/
+			a3textureActivate(texture_dm[j], a3tex_unit01);
 			// ****PRO-TIP: 
 			//	-> no break statement here because we can "fall through" the cases; this is convenient 
 			//		here because Phong does everything Lambert does, plus the additional step above
 		case intro_renderModeLambert:
 			// send lights and matrices, fall through to texturing
+
+			a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uLights_pos, introMaxCount_pointLight, lightPositions[0].v);
+			a3shaderUniformSendFloat(a3unif_single, currentDemoProgram->uLights_radius, introMaxCount_pointLight, lightRadii);
+
 			modelViewMat = currentSceneObject->modelMatrixStackPtr->modelViewMat;
 			a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMV, 1, modelViewMat.mm);
 			// ****TO-DO: 
 			//	-> send "normal matrix": the inverse-transpose of the model-view matrix
 			//		(hint: the correct uniform location is in the shader header)
 
+
+			modelViewMat = currentSceneObject->modelMatrixStackPtr->modelViewMatInverseTranspose;
+			a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMV_nrm, 1, modelViewMat.mm);
+
 		case intro_renderModeTexture:
 			// activate diffuse map, fall through to solid color
 			// ****TO-DO: 
 			//	-> activate diffuse texture on texture unit 0
-
+			a3textureActivate(texture_dm[j], a3tex_unit00);
 		case intro_renderModeSolid:
 			// send general matrix and color, end
 			// ****TO-DO: 
 			//	-> send model-view-projection matrix
 			//	-> send solid color (not a matrix)
+			modelViewProjectionMat = currentSceneObject->modelMatrixStackPtr->modelViewProjectionMat;
+			a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, modelViewProjectionMat.mm);
+
+
+			a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, rgba4[i].v);
 
 			break;
 		}
 		// ****TO-DO: 
 		//	-> uncomment render call
-	/*	a3shaderUniformSendInt(a3unif_single, currentDemoProgram->uIndex, 1, &j);
-		a3vertexDrawableActivateAndRender(drawable[j]);*/
+		a3shaderUniformSendInt(a3unif_single, currentDemoProgram->uIndex, 1, &j);
+		a3vertexDrawableActivateAndRender(drawable[j]);
 	}
 
 	// stop using stencil
@@ -298,7 +326,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// ****TO-DO: 
 	//	-> uncomment overlay rendering
-/*	// scene overlays
+	// scene overlays
 	if (demoState->displayGrid || demoState->displayTangentBases || demoState->displayWireframe)
 	{
 		// draw grid aligned to world
@@ -341,7 +369,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 				a3vertexDrawableActivateAndRender(drawable[j]);
 			}
 		}
-	}*/
+	}
 
 	// overlays with no depth
 	glDisable(GL_DEPTH_TEST);
@@ -354,7 +382,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// ****TO-DO: 
 	//	-> uncomment axis rendering
-/*	// superimpose axes
+	// superimpose axes
 	// draw coordinate axes in front of everything
 	currentDemoProgram = demoState->prog_drawColorAttrib;
 	a3shaderProgramActivate(currentDemoProgram->program);
@@ -378,7 +406,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 			modelMat = currentSceneObject->modelMatrixStackPtr->modelMat;
 			a3demo_drawModelSimple(modelViewProjectionMat.m, viewProjectionMat.m, modelMat.m, currentDemoProgram);
 		}
-	}*/
+	}
 }
 
 
