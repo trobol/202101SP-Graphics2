@@ -73,7 +73,7 @@ void a3intro_update_scene(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode,
 	a3demo_updateSceneObject(demoMode->obj_sphere, 0);
 	a3demo_updateSceneObjectStack(demoMode->obj_sphere, projector);
 
-	// ****TO-DO: 
+	// ****DONE: 
 	//	-> update the remaining scene objects and their matrix stacks
 	a3demo_updateSceneObject(demoMode->obj_teapot, 0);
 	a3demo_updateSceneObjectStack(demoMode->obj_teapot, projector);

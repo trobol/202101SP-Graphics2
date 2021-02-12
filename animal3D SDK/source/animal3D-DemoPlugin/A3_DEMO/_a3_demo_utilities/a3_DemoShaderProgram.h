@@ -93,7 +93,7 @@ struct a3_DemoStateShaderProgram
 			ubTransformMVP;		// model-view-projection matrix block
 	};
 
-	// ****TO-DO: 
+	// ****DONE: 
 	//	-> add lighting uniform and block handles
 
 	struct {

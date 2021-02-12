@@ -43,7 +43,7 @@
 // utility to unload geometry
 void a3demo_unloadGeometry(a3_DemoState* demoState)
 {
-	// ****TO-DO: 
+	// ****DONE: 
 	//	-> uncomment model unloading algorithm
 	a3_BufferObject* currentBuff = demoState->drawDataBuffer,
 		* const endBuff = currentBuff + demoStateMaxCount_drawDataBuffer;
@@ -63,7 +63,7 @@ void a3demo_unloadGeometry(a3_DemoState* demoState)
 // utility to unload shaders
 void a3demo_unloadShaders(a3_DemoState* demoState)
 {
-	// ****TO-DO: 
+	// ****DONE: 
 	//	-> uncomment shader program unloading algorithm
 	a3_DemoStateShaderProgram* currentProg = demoState->shaderProgram,
 		* const endProg = currentProg + demoStateMaxCount_shaderProgram;
@@ -76,7 +76,7 @@ void a3demo_unloadShaders(a3_DemoState* demoState)
 // utility to unload textures
 void a3demo_unloadTextures(a3_DemoState* demoState)
 {
-	// ****TO-DO: 
+	// ****DONE: 
 	//	-> uncomment texture unloading algorithm
 	a3_Texture* currentTex = demoState->texture,
 		* const endTex = currentTex + demoStateMaxCount_texture;
@@ -99,7 +99,7 @@ void a3demo_unloadFramebuffers(a3_DemoState* demoState)
 // confirm that all graphics objects were unloaded
 void a3demo_unloadValidate(const a3_DemoState* demoState)
 {
-	// ****TO-DO: 
+	// ****DONE: 
 	//	-> uncomment unload validation algorithm
 	a3ui32 handle;
 	const a3_BufferObject* currentBuff = demoState->drawDataBuffer,

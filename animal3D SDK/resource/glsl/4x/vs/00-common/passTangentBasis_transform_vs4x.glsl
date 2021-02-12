@@ -24,7 +24,7 @@
 
 #version 450
 
-// ****TO-DO: 
+// ****DONE: 
 //	-> declare matrices
 //		(hint: not MVP this time, made up of multiple; see render code)
 //	-> transform input position correctly, assign to output
@@ -56,6 +56,7 @@ flat out int vInstanceID;
 
 void main()
 {
+	// put vPosition in view space
 	vPosition = uMV * aPosition;
 
 	vNormal = uMV_nrm * vec4(aNormal, 1.0f);
