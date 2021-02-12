@@ -99,6 +99,7 @@ struct a3_DemoStateShaderProgram
 	struct {
 		a3i32 uLights_pos;
 		a3i32 uLights_radius;
+		a3i32 uLights_color;
 	};
 };
 

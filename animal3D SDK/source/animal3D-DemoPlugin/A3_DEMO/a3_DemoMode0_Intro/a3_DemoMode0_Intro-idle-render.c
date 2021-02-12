@@ -35,16 +35,14 @@
 
 #include "../_a3_demo_utilities/a3_DemoRenderUtils.h"
 
-
 // OpenGL
 #ifdef _WIN32
 #include <gl/glew.h>
 #include <Windows.h>
 #include <GL/GL.h>
-#else	// !_WIN32
+#else // !_WIN32
 #include <OpenGL/gl3.h>
-#endif	// _WIN32
-
+#endif // _WIN32
 
 //-----------------------------------------------------------------------------
 
@@ -69,7 +67,6 @@ void a3intro_render_controls(a3_DemoState const* demoState, a3_DemoMode0_Intro c
 		"    Rendering mode (%u / %u) ('j' | 'k'): %s", renderMode + 1, intro_renderMode_max, renderModeName[renderMode]);
 }
 
-
 //-----------------------------------------------------------------------------
 
 // sub-routine for rendering the demo state using the shading pipeline
@@ -83,41 +80,42 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// RGB
 	const a3vec4 rgba4[] = {
-		{ 1.00f, 0.00f, 0.00f, 1.00f },	// red
-		{ 1.00f, 0.25f, 0.00f, 1.00f },
-		{ 1.00f, 0.50f, 0.00f, 1.00f },	// orange
-		{ 1.00f, 0.75f, 0.00f, 1.00f },
-		{ 1.00f, 1.00f, 0.00f, 1.00f },	// yellow
-		{ 0.75f, 1.00f, 0.00f, 1.00f },
-		{ 0.50f, 1.00f, 0.00f, 1.00f },	// lime
-		{ 0.25f, 1.00f, 0.00f, 1.00f },
-		{ 0.00f, 1.00f, 0.00f, 1.00f },	// green
-		{ 0.00f, 1.00f, 0.25f, 1.00f },
-		{ 0.00f, 1.00f, 0.50f, 1.00f },	// aqua
-		{ 0.00f, 1.00f, 0.75f, 1.00f },
-		{ 0.00f, 1.00f, 1.00f, 1.00f },	// cyan
-		{ 0.00f, 0.75f, 1.00f, 1.00f },
-		{ 0.00f, 0.50f, 1.00f, 1.00f },	// sky
-		{ 0.00f, 0.25f, 1.00f, 1.00f },
-		{ 0.00f, 0.00f, 1.00f, 1.00f },	// blue
-		{ 0.25f, 0.00f, 1.00f, 1.00f },
-		{ 0.50f, 0.00f, 1.00f, 1.00f },	// purple
-		{ 0.75f, 0.00f, 1.00f, 1.00f },
-		{ 1.00f, 0.00f, 1.00f, 1.00f },	// magenta
-		{ 1.00f, 0.00f, 0.75f, 1.00f },
-		{ 1.00f, 0.00f, 0.50f, 1.00f },	// rose
-		{ 1.00f, 0.00f, 0.25f, 1.00f },
+		{1.00f, 0.00f, 0.00f, 1.00f}, // red
+		{1.00f, 0.25f, 0.00f, 1.00f},
+		{1.00f, 0.50f, 0.00f, 1.00f}, // orange
+		{1.00f, 0.75f, 0.00f, 1.00f},
+		{1.00f, 1.00f, 0.00f, 1.00f}, // yellow
+		{0.75f, 1.00f, 0.00f, 1.00f},
+		{0.50f, 1.00f, 0.00f, 1.00f}, // lime
+		{0.25f, 1.00f, 0.00f, 1.00f},
+		{0.00f, 1.00f, 0.00f, 1.00f}, // green
+		{0.00f, 1.00f, 0.25f, 1.00f},
+		{0.00f, 1.00f, 0.50f, 1.00f}, // aqua
+		{0.00f, 1.00f, 0.75f, 1.00f},
+		{0.00f, 1.00f, 1.00f, 1.00f}, // cyan
+		{0.00f, 0.75f, 1.00f, 1.00f},
+		{0.00f, 0.50f, 1.00f, 1.00f}, // sky
+		{0.00f, 0.25f, 1.00f, 1.00f},
+		{0.00f, 0.00f, 1.00f, 1.00f}, // blue
+		{0.25f, 0.00f, 1.00f, 1.00f},
+		{0.50f, 0.00f, 1.00f, 1.00f}, // purple
+		{0.75f, 0.00f, 1.00f, 1.00f},
+		{1.00f, 0.00f, 1.00f, 1.00f}, // magenta
+		{1.00f, 0.00f, 0.75f, 1.00f},
+		{1.00f, 0.00f, 0.50f, 1.00f}, // rose
+		{1.00f, 0.00f, 0.25f, 1.00f},
 	};
 	const a3vec4 grey4[] = {
-		{ 0.5f, 0.5f, 0.5f, 1.0f },	// solid grey
-		{ 0.5f, 0.5f, 0.5f, 0.5f },	// translucent grey
+		{0.5f, 0.5f, 0.5f, 1.0f}, // solid grey
+		{0.5f, 0.5f, 0.5f, 0.5f}, // translucent grey
 	};
 	const a3ui32 hueCount = sizeof(rgba4) / sizeof(*rgba4),
 		redIndex = 0, orangeIndex = 2, yellowIndex = 4, limeIndex = 6,
 		greenIndex = 8, aquaIndex = 10, cyanIndex = 12, skyIndex = 14,
 		blueIndex = 16, purpleIndex = 18, magentaIndex = 20, roseIndex = 22;
 	const a3real
-		* const red = rgba4[redIndex].v, * const orange = rgba4[orangeIndex].v, * const yellow = rgba4[yellowIndex].v, * const lime = rgba4[limeIndex].v,
+		* const red = rgba4[redIndex].v,
+		* const orange = rgba4[orangeIndex].v, * const yellow = rgba4[yellowIndex].v, * const lime = rgba4[limeIndex].v,
 		* const green = rgba4[greenIndex].v, * const aqua = rgba4[aquaIndex].v, * const cyan = rgba4[cyanIndex].v, * const sky = rgba4[skyIndex].v,
 		* const blue = rgba4[blueIndex].v, * const purple = rgba4[purpleIndex].v, * const magenta = rgba4[magentaIndex].v, * const rose = rgba4[roseIndex].v,
 		* const grey = grey4[0].v, * const grey_t = grey4[1].v;
@@ -127,14 +125,14 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	const a3_SceneObjectComponent* activeCameraObject = activeCamera->sceneObjectPtr;
 	const a3_SceneObjectComponent* currentSceneObject, * endSceneObject;
 
-	// ****TO-DO: 
+	// ****TO-DO:
 	//	-> uncomment graphics object arrays
 	// temp drawable pointers
 	const a3_VertexDrawable* drawable[] = {
-		0,								// root
-		0,								// camera
-		demoState->draw_unit_box,		// skybox
-		demoState->draw_unit_sphere,	// objects
+		0,							 // root
+		0,							 // camera
+		demoState->draw_unit_box,	 // skybox
+		demoState->draw_unit_sphere, // objects
 		demoState->draw_unit_cylinder,
 		demoState->draw_unit_capsule,
 		demoState->draw_unit_torus,
@@ -145,10 +143,10 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// temp texture pointers
 	const a3_Texture* texture_dm[] = {
-		0,								// root
-		0,								// camera
-		demoState->tex_skybox_clouds,	// skybox
-		demoState->tex_checker,			// objects
+		0,							  // root
+		0,							  // camera
+		demoState->tex_skybox_clouds, // skybox
+		demoState->tex_checker,		  // objects
 		demoState->tex_checker,
 		demoState->tex_checker,
 		demoState->tex_checker,
@@ -178,7 +176,6 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	modelViewProjectionMat = viewProjectionMat;
 	modelMat = modelViewMat = atlasMat = a3mat4_identity;
 
-
 	//-------------------------------------------------------------------------
 	// 1) SCENE PASS: render scene with desired shader
 	//	- activate scene framebuffer
@@ -191,7 +188,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	a3framebufferDeactivateSetViewport(a3fbo_depth24_stencil8,
 		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth, demoState->frameHeight);
 
-	// ****TO-DO: 
+	// ****TO-DO:
 	//	-> uncomment skybox or solid clear
 	// clear buffers
 	if (demoState->displaySkybox)
@@ -215,13 +212,13 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	//if (demoState->stencilTest)
 	//	a3demo_drawStencilTest(modelViewProjectionMat.m, viewProjectionMat.m, modelMat.m, demoState->prog_drawColorUnif, demoState->draw_unit_sphere);
 
-	// ****TO-DO: 
+	// ****TO-DO:
 	//	-> uncomment shader program activation for current mode
 	// select program based on settings
 	currentDemoProgram = renderProgram[renderMode];
 	a3shaderProgramActivate(currentDemoProgram->program);
 
-	// send shared data: 
+	// send shared data:
 	//	- projection matrix
 	//	- light data
 	//	- activate shared textures including atlases if using
@@ -233,22 +230,24 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	if (demoState->updateAnimation)
 		a3shaderUniformSendDouble(a3unif_single, currentDemoProgram->uTime, 1, &demoState->timer_display->totalTime);
 
-	// ****TO-DO: 
+	// ****TO-DO:
 	//	-> send lighting uniforms and bind blocks where appropriate
-	a3vec4 lightPositions[introMaxCount_pointLight];					// position in rendering target space
-	a3vec4 color[introMaxCount_pointLight];						// RGB color with padding
-	a3real lightRadii[introMaxCount_pointLight];						// radius (distance of effect from center)
-	a3real radiusSq[introMaxCount_pointLight];					// radius squared (if needed)
-	a3real lightRadiiInv[introMaxCount_pointLight];					// radius inverse (attenuation factor)
-	a3real lightRadiiInvSq[introMaxCount_pointLight];					// radius inverse squared (attenuation factor)
 
-	for (int i = 0; i < introMaxCount_pointLight; i++) {
-		lightPositions[i] = demoMode->pointLightData[i].position;
-		color[i] = demoMode->pointLightData[i].color;
-		lightRadii[i] = demoMode->pointLightData[i].radius;
-		radiusSq[i] = demoMode->pointLightData[i].radiusSq;
-		lightRadiiInv[i] = demoMode->pointLightData[i].radiusInv;
-		lightRadiiInvSq[i] = demoMode->pointLightData[i].radiusInvSq;
+	// build light arrays
+	a3vec4 lightPositions[introMaxCount_pointLight];  // position in rendering target space
+	a3vec4 lightColors[introMaxCount_pointLight];	  // RGB color with padding
+	a3real lightRadii[introMaxCount_pointLight];	  // radius inverse (attenuation factor)
+	for (int i = 0; i < introMaxCount_pointLight; i++)
+	{
+		a3_PointLightData const* lightData = demoMode->pointLightData + i;
+		a3vec4 v_out;
+		const a3real(*m)[4] = activeCamera->sceneObjectPtr->modelMatrixStackPtr->modelMatInverse.m;
+		const a3real* v = lightData->worldPos.v;
+		a3real4Real4x4ProductR(v_out.v, m, v);
+
+		lightPositions[i] = v_out;
+		lightColors[i] = demoMode->pointLightData[i].color;
+		lightRadii[i] = demoMode->pointLightData[i].radiusInv;
 	}
 
 	// select pipeline algorithm
@@ -265,47 +264,46 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 		case intro_renderModePhong:
 			// activate specular map, fall through to Lambert
 
-			// ****TO-DO: 
+			// ****TO-DO:
 			//	-> uncomment texture activation
 			a3textureActivate(texture_dm[j], a3tex_unit01);
-			// ****PRO-TIP: 
-			//	-> no break statement here because we can "fall through" the cases; this is convenient 
+			// ****PRO-TIP:
+			//	-> no break statement here because we can "fall through" the cases; this is convenient
 			//		here because Phong does everything Lambert does, plus the additional step above
 		case intro_renderModeLambert:
 			// send lights and matrices, fall through to texturing
 
 			a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uLights_pos, introMaxCount_pointLight, lightPositions[0].v);
 			a3shaderUniformSendFloat(a3unif_single, currentDemoProgram->uLights_radius, introMaxCount_pointLight, lightRadii);
+			a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uLights_color, introMaxCount_pointLight, lightColors[0].v);
 
 			modelViewMat = currentSceneObject->modelMatrixStackPtr->modelViewMat;
 			a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMV, 1, modelViewMat.mm);
-			// ****TO-DO: 
+			// ****TO-DO:
 			//	-> send "normal matrix": the inverse-transpose of the model-view matrix
 			//		(hint: the correct uniform location is in the shader header)
-
 
 			modelViewMat = currentSceneObject->modelMatrixStackPtr->modelViewMatInverseTranspose;
 			a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMV_nrm, 1, modelViewMat.mm);
 
 		case intro_renderModeTexture:
 			// activate diffuse map, fall through to solid color
-			// ****TO-DO: 
+			// ****TO-DO:
 			//	-> activate diffuse texture on texture unit 0
 			a3textureActivate(texture_dm[j], a3tex_unit00);
 		case intro_renderModeSolid:
 			// send general matrix and color, end
-			// ****TO-DO: 
+			// ****TO-DO:
 			//	-> send model-view-projection matrix
 			//	-> send solid color (not a matrix)
 			modelViewProjectionMat = currentSceneObject->modelMatrixStackPtr->modelViewProjectionMat;
 			a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, modelViewProjectionMat.mm);
 
-
 			a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, rgba4[i].v);
 
 			break;
 		}
-		// ****TO-DO: 
+		// ****TO-DO:
 		//	-> uncomment render call
 		a3shaderUniformSendInt(a3unif_single, currentDemoProgram->uIndex, 1, &j);
 		a3vertexDrawableActivateAndRender(drawable[j]);
@@ -315,7 +313,6 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	if (demoState->stencilTest)
 		glDisable(GL_STENCIL_TEST);
 
-
 	//-------------------------------------------------------------------------
 	// OVERLAYS: done after FSQ so they appear over everything else
 	//	- disable depth testing
@@ -324,7 +321,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	// enable alpha
 	a3demo_enableCompositeBlending();
 
-	// ****TO-DO: 
+	// ****TO-DO:
 	//	-> uncomment overlay rendering
 	// scene overlays
 	if (demoState->displayGrid || demoState->displayTangentBases || demoState->displayWireframe)
@@ -377,10 +374,9 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	// hidden volumes
 	if (demoState->displayHiddenVolumes)
 	{
-
 	}
 
-	// ****TO-DO: 
+	// ****TO-DO:
 	//	-> uncomment axis rendering
 	// superimpose axes
 	// draw coordinate axes in front of everything
@@ -408,6 +404,5 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 		}
 	}
 }
-
 
 //-----------------------------------------------------------------------------

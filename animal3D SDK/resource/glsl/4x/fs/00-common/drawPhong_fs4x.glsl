@@ -32,8 +32,52 @@
 
 layout (location = 0) out vec4 rtFragColor;
 
+uniform vec4 uLights_pos[4];
+uniform float uLights_radius[4];
+uniform vec4 uLights_color[4];
+uniform sampler2D uImage00;
+uniform vec4 uColor;
+
+
+in vec4 vNormal;
+in vec2 vTexcoord;
+in vec4 vPosition;
+
+
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
-	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
+	
+	vec3 light;
+	for(int i = 0; i < 4; i++) {
+		
+		// from opengl blue book
+		vec3 N = vNormal.xyz;
+		vec3 L = uLights_pos[i].xyz - vPosition.xyz;
+		vec3 V = - vPosition.xyz;
+
+		float dist = length(L);
+
+		// Normalize all three vectors
+		N = normalize(N);
+		L = normalize(L);
+		V = normalize(V);
+
+		vec3 R = reflect(-L, N);
+
+		// linear attenuation
+		float attenuation = 1.0 / ( 1 + uLights_radius[i] * dist); 
+		float diffuse = max(dot(N, L), 0) * attenuation;
+		float specular = pow(max(dot(R, V), 0.0), 128);
+		float ambient = 0;
+		light += diffuse + specular * uLights_color[i].rgb;
+	}
+
+
+
+	
+	vec4 color = texture2D(uImage00, vTexcoord);
+	color *= uColor;
+	color.xyz *= light;
+	rtFragColor = color;
 }

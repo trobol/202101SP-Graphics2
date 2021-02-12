@@ -43,21 +43,34 @@ in vec4 vPosition;
 
 uniform vec4 uLights_pos[4];
 uniform float uLights_radius[4];
+uniform vec4 uLights_color[4];
 uniform sampler2D uImage00;
 uniform vec4 uColor;
 
 void main()
 {
-	float brightness = 0;
+	vec3 diffuse;
 	for(int i = 0; i < 4; i++) {
 		
-		vec4 n_norm = normalize(vNormal);
-		vec4 l = uLights_pos[i] - vPosition;
-		float dist = length(l);
-		vec4 l_norm = l / dist;
-		brightness += max(dot(n_norm, l_norm), 0) * 0.2;
+		// from opengl blue book
+		vec3 N = vNormal.xyz;
+		vec3 L = uLights_pos[i].xyz - vPosition.xyz;
+		vec3 V = - vPosition.xyz;
+
+		float dist = length(L);
+
+		// Normalize all three vectors
+		N = normalize(N);
+		L = normalize(L);
+		V = normalize(V);
+
+		// linear attenuation
+		float attenuation = 1.0 / ( 1 + uLights_radius[i] * dist); 
+		diffuse += max(dot(N, L), 0) * attenuation * uLights_color[i].rgb;
 	}
 
-	
-	rtFragColor = uColor * texture2D(uImage00, vTexcoord) * brightness;
+	vec4 color = texture2D(uImage00, vTexcoord);
+	color *= uColor;
+	color.xyz *= diffuse;
+	rtFragColor = color;
 }

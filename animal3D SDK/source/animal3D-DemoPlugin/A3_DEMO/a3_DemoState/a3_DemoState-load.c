@@ -571,7 +571,7 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 	currentDemoProg = demoState->prog_drawPhong;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLambert_fs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_fs->shader);
 
 	// ****TO-DO: 
 	//	-> uncomment program linking and validation
@@ -664,7 +664,8 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 		// I know this only sets the first element but I couldnt figure out a way to 
 		// initilize the full array with a3
 		a3demo_setUniformDefaultVec4(currentDemoProg, uLights_pos, a3vec4_one.v);
-		a3demo_setUniformDefaultFloat(currentDemoProg, uLights_radius, 0);
+		a3demo_setUniformDefaultVec4(currentDemoProg, uLights_color, a3vec4_one.v);
+		a3demo_setUniformDefaultFloat(currentDemoProg, uLights_radius, defaultFloat);
 	}
 
 

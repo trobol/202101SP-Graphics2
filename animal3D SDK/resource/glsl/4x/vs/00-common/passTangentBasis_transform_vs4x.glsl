@@ -39,6 +39,7 @@
 uniform mat4 uMV;
 uniform mat4 uP;
 uniform mat4 uMV_nrm;
+uniform vec4 uLights_pos[4];
 
 layout (location = 0) in vec4 aPosition;
 layout (location = 2) in vec3 aNormal;
@@ -47,6 +48,7 @@ layout (location = 8) in vec2 aTexcoord;
 out vec4 vNormal;
 out vec2 vTexcoord;
 out vec4 vPosition;
+flat out vec4 vLight_pos[4];
 
 flat out int vVertexID;
 flat out int vInstanceID;
