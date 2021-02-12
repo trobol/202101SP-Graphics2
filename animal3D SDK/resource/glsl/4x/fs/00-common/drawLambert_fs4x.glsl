@@ -64,8 +64,10 @@ void main()
 		L = normalize(L);
 		V = normalize(V);
 
-		// linear attenuation
-		float attenuation = 1.0 / ( 1 + uLights_radius[i] * dist); 
+		// source: https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
+		// this is allegedly the formula unity uses
+		float a = dist/uLights_radius[i] * 5;
+		float attenuation = 1.0/ ((a*a) + 1);
 		diffuse += max(dot(N, L), 0) * attenuation * uLights_color[i].rgb;
 	}
 

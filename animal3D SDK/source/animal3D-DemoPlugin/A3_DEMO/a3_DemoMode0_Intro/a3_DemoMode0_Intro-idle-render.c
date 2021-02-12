@@ -247,7 +247,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 		lightPositions[i] = v_out;
 		lightColors[i] = demoMode->pointLightData[i].color;
-		lightRadii[i] = demoMode->pointLightData[i].radiusInv;
+		lightRadii[i] = demoMode->pointLightData[i].radius;
 	}
 
 	// select pipeline algorithm

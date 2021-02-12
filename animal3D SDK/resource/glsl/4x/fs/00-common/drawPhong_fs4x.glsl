@@ -65,12 +65,14 @@ void main()
 
 		vec3 R = reflect(-L, N);
 
-		// linear attenuation
-		float attenuation = 1.0 / ( 1 + uLights_radius[i] * dist); 
+		// source: https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
+		// this is allegedly the formula unity uses
+		float a = dist/uLights_radius[i] * 5;
+		float attenuation = 1.0/ ((a*a) + 1);
 		float diffuse = max(dot(N, L), 0) * attenuation;
-		float specular = pow(max(dot(R, V), 0.0), 128);
+		float specular = pow(max(dot(R, V), 0.0), 128) * attenuation;
 		float ambient = 0;
-		light += diffuse + specular * uLights_color[i].rgb;
+		light += diffuse + specular * uLights_color[i].rgb ;
 	}
 
 
