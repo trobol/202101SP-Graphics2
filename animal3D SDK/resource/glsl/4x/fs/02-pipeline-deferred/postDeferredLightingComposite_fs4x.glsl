@@ -24,6 +24,14 @@
 
 #version 450
 
+// ****TO-DO:
+//	-> declare samplers containing results of light pre-pass
+//	-> declare samplers for texcoords, diffuse and specular maps
+//	-> implement Phong sum with samples from the above
+//		(hint: this entire shader is about sampling textures)
+
+in vec4 vTexcoord_atlas;
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()

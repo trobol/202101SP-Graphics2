@@ -26,10 +26,25 @@
 
 #define MAX_INSTANCES 1024
 
+// ****TO-DO: 
+//	-> declare uniform block containing MVP for all lights
+//	-> calculate final clip-space position
+//	-> declare varying for biased clip-space position
+//	-> calculate and copy biased clip to varying
+//		(hint: bias matrix is provided as a constant)
+
 layout (location = 0) in vec4 aPosition;
 
 flat out int vVertexID;
 flat out int vInstanceID;
+
+// bias matrix
+const mat4 bias = mat4(
+	0.5, 0.0, 0.0, 0.0,
+	0.0, 0.5, 0.0, 0.0,
+	0.0, 0.0, 0.5, 0.0,
+	0.5, 0.5, 0.5, 1.0
+);
 
 void main()
 {

@@ -24,6 +24,21 @@
 
 #version 450
 
+#define MAX_LIGHTS 1024
+
+// ****TO-DO:
+//	-> declare biased clip coordinate varying from vertex shader
+//	-> declare point light data structure and uniform block
+//	-> declare pertinent samplers with geometry data ("g-buffers")
+//	-> calculate screen-space coordinate from biased clip coord
+//		(hint: perspective divide)
+//	-> use screen-space coord to sample g-buffers
+//	-> calculate view-space fragment position using depth sample
+//		(hint: same as deferred shading)
+//	-> calculate final diffuse and specular shading for current light only
+
+flat in int vInstanceID;
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()

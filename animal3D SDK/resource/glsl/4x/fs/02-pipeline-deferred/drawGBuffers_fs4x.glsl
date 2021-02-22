@@ -24,6 +24,14 @@
 
 #version 450
 
+// ****TO-DO:
+//	-> declare view-space varyings from vertex shader
+//	-> declare MRT for pertinent surface data (incoming attribute info)
+//		(hint: at least normal and texcoord are needed)
+//	-> declare uniform samplers (at least normal map)
+//	-> calculate final normal
+//	-> output pertinent surface data
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()

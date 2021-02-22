@@ -24,6 +24,25 @@
 
 #version 450
 
+#define MAX_LIGHTS 1024
+
+// ****TO-DO:
+//	-> this one is pretty similar to the forward shading algorithm (Phong NM) 
+//		except it happens on a plane, given images of the scene's geometric 
+//		data (the "g-buffers"); all of the information about the scene comes 
+//		from screen-sized textures, so use the texcoord varying as the UV
+//	-> declare point light data structure and uniform block
+//	-> declare pertinent samplers with geometry data ("g-buffers")
+//	-> use screen-space coord (the inbound UV) to sample g-buffers
+//	-> calculate view-space fragment position using depth sample
+//		(hint: modify screen-space coord, use appropriate matrix to get it 
+//		back to view-space, perspective divide)
+//	-> calculate and accumulate final diffuse and specular shading
+
+in vec4 vTexcoord_atlas;
+
+uniform int uCount;
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()
