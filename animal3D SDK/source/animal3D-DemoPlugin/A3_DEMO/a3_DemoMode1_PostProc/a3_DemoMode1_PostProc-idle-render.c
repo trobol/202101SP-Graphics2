@@ -271,7 +271,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	};
 
 	// pixel size and effect axis
-	//a3vec2 pixelSize = a3vec2_one;
+	a3vec2 pixelSize = a3vec2_one;
 
 
 	//-------------------------------------------------------------------------
@@ -283,9 +283,9 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 
 	// ****TO-DO:
 	//	-> uncomment shadow pass FBO binding
-/*	// bind scene FBO
+	// bind scene FBO
 	currentWriteFBO = writeFBO[postproc_renderPassShadow]; //demoState->fbo_d32
-	a3framebufferActivate(currentWriteFBO);*/
+	a3framebufferActivate(currentWriteFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	currentDemoProgram = demoState->prog_transform;
