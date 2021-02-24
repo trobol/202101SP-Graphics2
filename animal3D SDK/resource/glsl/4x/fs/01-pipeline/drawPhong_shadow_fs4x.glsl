@@ -35,27 +35,38 @@
 
 layout (location = 0) out vec4 rtFragColor;
 
-uniform vec4 uLights_pos[4];
-uniform float uLights_radius[4];
-uniform vec4 uLights_color[4];
-uniform sampler2D uImage00;
+uniform sampler2D uTex_dm;
+
 uniform vec4 uColor;
 uniform int uCount;
-uniform sampler2D uShadowMap;
+uniform sampler2D uTex_shadow;
+
+struct sPointLight {
+	vec4 viewPos, worldPos, color;
+	float radius, radiusSq, radiusInv, radiusInvSq;
+};
+
+uniform ubLight {
+	sPointLight uLights[8];
+};
+
 
 in vec4 vNormal;
-in vec2 vTexcoord;
 in vec4 vPosition;
-in vec4 vShadowcoord;
+
+in vec2 vTexcoord;
+in vec4 vShadowCoord;
+
 
 void main()
 {
+	vec3 tex_color = texture(uTex_dm, vTexcoord).rgb;
 	vec3 light;
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < uCount; i++) {
 		
 		// from opengl blue book
 		vec3 N = vNormal.xyz;
-		vec3 L = uLights_pos[i].xyz - vPosition.xyz;
+		vec3 L = uLights[i].viewPos.xyz - vPosition.xyz;
 		vec3 V = - vPosition.xyz;
 
 		float dist = length(L);
@@ -69,17 +80,20 @@ void main()
 
 		// source: https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
 		// this is allegedly the formula unity uses
-		float a = dist/uLights_radius[i] * 5;
+		float a = dist/uLights[i].radius * 5;
 		float attenuation = 1.0/ ((a*a) + 1);
-		float diffuse = max(dot(N, L), 0) * attenuation;
+		float diffuse = max(dot(N, L), 0)  * attenuation;
 		float specular = pow(max(dot(R, V), 0.0), 128) * attenuation;
 		float ambient = 0;
-		light += diffuse + specular * uLights_color[i].rgb ;
+		light += (diffuse * uLights[i].color.rgb * tex_color )+ (specular * uLights[i].color.rgb * tex_color);
 	}
 
 
-	vec4 color = texture2D(uImage00, vTexcoord);
-	color *= uColor;
-	color.xyz *= light;
-	rtFragColor = color;
+	vec4 shadowCoord = vShadowCoord / vShadowCoord.w;
+	vec4 shadowSample = texture(uTex_shadow, shadowCoord.xy);
+	float shadowTest = float(shadowSample.r > shadowCoord.z - 0.0001);
+
+	light.xyz *= shadowTest;
+	rtFragColor = vec4( light, 1);
+
 }

@@ -32,13 +32,16 @@
 
 layout (location = 0) out vec4 rtFragColor;
 
-in vec2 uv;
+in vec2 vTexCoord;
 
-uniform sampler2D tex;
-
+uniform sampler2D uTex_dm;
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE ORANGE
-	rtFragColor = vec4(1.0, 0.5, 0.0, 1.0);
+	vec3 color = texture(uTex_dm, vTexCoord).rgb;
+	// relative luminance
+	float luminance = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+
+	//rtFragColor = vec4(color * (luminance * luminance), 1);
+	rtFragColor = vec4(0.0, 1.0, 0.5, 1.0);
 }

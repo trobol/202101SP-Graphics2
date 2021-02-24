@@ -43,7 +43,7 @@
 //	-> declare and write varying for shadow coordinate
 
 // matrix stack for a single scene object/model
-struct ModelMatrixStack
+struct sModelMatrixStack
 {
 	mat4 modelMat;						// model matrix (object -> world)
 	mat4 modelMatInverse;					// model inverse matrix (world -> object)
@@ -56,7 +56,7 @@ struct ModelMatrixStack
 };
 
 // matrix stack for a viewer object
-struct ProjectorMatrixStack
+struct sProjectorMatrixStack
 {
 	mat4 projectionMat;					// projection matrix (viewer -> clip)
 	mat4 projectionMatInverse;			// projection inverse matrix (clip -> viewer)
@@ -71,21 +71,41 @@ struct ProjectorMatrixStack
 
 uniform ubTransformStack
 {
-	ProjectorMatrixStack uCamera, uLight;
-	ModelMatrixStack uModel[16]; 
+	sProjectorMatrixStack uCamera, uLight;
+	sModelMatrixStack uModel[64]; 
 };
 
 layout (location = 0) in vec4 aPosition;
+layout (location = 2) in vec4 aNormal;
+layout (location = 8) in vec2 aTexcoord;
+layout (location = 10) in vec4 aTangent;
+layout (location = 11) in vec4 aBitangent;
+
+
+out vec4 vNormal;
+out vec4 vPosition;
+
+out vec2 vTexcoord;
+out vec4 vShadowCoord;
 
 flat out int vVertexID;
 flat out int vInstanceID;
+
 
 uniform int uIndex;
 
 void main()
 {
-	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+
+	
+	vNormal = uModel[uIndex].modelViewMatInverseTranspose * aNormal;
+	vPosition = uModel[uIndex].modelViewMat * aPosition;
+
+	
+	gl_Position = uCamera.projectionMat * vPosition;
+	
+	vTexcoord = aTexcoord;
+	vShadowCoord = uLight.viewProjectionBiasMat * uModel[uIndex].modelMat * aPosition;
 
 	vVertexID = gl_VertexID;
 	vInstanceID = gl_InstanceID;

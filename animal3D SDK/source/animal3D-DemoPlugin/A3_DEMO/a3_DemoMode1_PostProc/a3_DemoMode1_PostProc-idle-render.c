@@ -281,7 +281,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//		- clear depth buffer
 	//		- render shapes using pass-thru shaders
 
-	// ****TO-DO:
+	// ****DONE:
 	//	-> uncomment shadow pass FBO binding
 	// bind scene FBO
 	currentWriteFBO = writeFBO[postproc_renderPassShadow]; //demoState->fbo_d32
@@ -318,7 +318,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//		- render shapes using appropriate shaders
 	//		- capture color and depth
 
-	// ****TO-DO:
+	// ****DONE:
 	//	-> uncomment scene pass FBO binding
 	// bind scene FBO
 	currentWriteFBO = writeFBO[postproc_renderPassScene]; //demoState->fbo_c16x4_d24s8
@@ -418,7 +418,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//		-> blur in other direction (e.g. vertical)
 	//	-> composite original scene result with final blur iteration results
 
-	// ****TO-DO:
+	// ****DONE:
 	//	-> uncomment first post-processing pass
 	//	-> implement bloom pipeline following the above algorithm
 	//		(hint: this is the entirety of the first bright pass)
@@ -597,7 +597,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	if ((demoState->displayGrid || demoState->displayTangentBases || demoState->displayWireframe) &&
 		renderPass != postproc_renderPassShadow)
 	{
-		// ****TO-DO:
+		// ****DONE:
 		//	-> uncomment overlay FBO activation and configuration
 		// activate scene FBO and clear color; reuse depth
 		currentWriteFBO = demoState->fbo_c16x4_d24s8;
