@@ -866,26 +866,20 @@ void a3demo_loadFramebuffers(a3_DemoState* demoState)
 	//		-> set of half/quarter/eighth-size color only
 	// initialize framebuffers: MRT, color and depth formats, size
 	fbo = demoState->fbo_c16x4_d24s8; // scene
-	a3framebufferCreate(fbo, "fbo:c16x4:d24s8", 4, a3fbo_colorRGBA16, a3fbo_depth24_stencil8
-		, frameWidth1, frameHeight1); //MRT-color/depth/stencil combo
-	/*
-	fbo = demoState->fbo_c32f; // what is this for
-	a3framebufferCreate(fbo, "fbo:c32f", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable
-		, frameWidth1, frameHeight1); //float color only
-*/
+	a3framebufferCreate(fbo, "fbo:c16x4:d24s8", 4, a3fbo_colorRGBA16, a3fbo_depth24_stencil8, frameWidth1, frameHeight1); //MRT-color/depth/stencil combo
+
+	fbo = demoState->fbo_c32f; // what is this for?
+	a3framebufferCreate(fbo, "fbo:c32f", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth1, frameHeight1); //float color only
+
 	fbo = demoState->fbo_d32;					//Shadow pass
-	a3framebufferCreate(fbo, "fbo:d32", 0, a3fbo_colorDisable, a3fbo_depth32
-		, shadowMapSize, shadowMapSize); //depth only
+	a3framebufferCreate(fbo, "fbo:d32", 0, a3fbo_colorDisable, a3fbo_depth32, shadowMapSize, shadowMapSize); //depth only
 
 	fbo = demoState->fbo_c16_szHalf + 0;		//Bright half
-	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable
-		, frameWidth2, frameHeight2); //half-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
 	fbo = demoState->fbo_c16_szHalf + 1;		//blur H half
-	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable
-		, frameWidth2, frameHeight2); //half-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
 	fbo = demoState->fbo_c16_szHalf + 2;		//blur V half
-	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable
-		, frameWidth2, frameHeight2); //half-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
 
 	fbo = demoState->fbo_c16_szQuarter + 0;	//bright quarter
 	a3framebufferCreate(fbo, "fbo:c16:szQuarter", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth4, frameHeight4); //quarter-size MRT-color only
@@ -903,8 +897,7 @@ void a3demo_loadFramebuffers(a3_DemoState* demoState)
 
 
 	fbo = demoState->fbo_c16x4;				//composition
-	a3framebufferCreate(fbo, "fbo:c16x4", 1, a3fbo_colorRGBA16, a3fbo_depthDisable
-		, frameWidth1, frameHeight1); //full-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16x4", 4, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth1, frameHeight1); //full-size MRT-color only
 
 
 	// ****DONE:

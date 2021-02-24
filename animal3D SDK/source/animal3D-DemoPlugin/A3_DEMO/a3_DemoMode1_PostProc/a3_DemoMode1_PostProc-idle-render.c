@@ -599,11 +599,11 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	{
 		// ****TO-DO:
 		//	-> uncomment overlay FBO activation and configuration
-	/*	// activate scene FBO and clear color; reuse depth
+		// activate scene FBO and clear color; reuse depth
 		currentWriteFBO = demoState->fbo_c16x4_d24s8;
 		a3framebufferActivate(currentWriteFBO);
 		glDisable(GL_STENCIL_TEST);
-		glClear(GL_COLOR_BUFFER_BIT);*/
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw grid aligned to world
 		if (demoState->displayGrid)
