@@ -42,6 +42,39 @@
 //		(hint: transformation sequence is model-view-projection-bias)
 //	-> declare and write varying for shadow coordinate
 
+// matrix stack for a single scene object/model
+struct ModelMatrixStack
+{
+	mat4 modelMat;						// model matrix (object -> world)
+	mat4 modelMatInverse;					// model inverse matrix (world -> object)
+	mat4 modelMatInverseTranspose;		// model inverse-transpose matrix (object -> world skewed)
+	mat4 modelViewMat;					// model-view matrix (object -> viewer)
+	mat4 modelViewMatInverse;				// model-view inverse matrix (viewer -> object)
+	mat4 modelViewMatInverseTranspose;	// model-view inverse transpose matrix (object -> viewer skewed)
+	mat4 modelViewProjectionMat;			// model-view-projection matrix (object -> clip)
+	mat4 atlasMat;						// atlas matrix (texture -> cell)
+};
+
+// matrix stack for a viewer object
+struct ProjectorMatrixStack
+{
+	mat4 projectionMat;					// projection matrix (viewer -> clip)
+	mat4 projectionMatInverse;			// projection inverse matrix (clip -> viewer)
+	mat4 projectionBiasMat;				// projection-bias matrix (viewer -> biased clip)
+	mat4 projectionBiasMatInverse;		// projection-bias inverse matrix (biased clip -> viewer)
+	mat4 viewProjectionMat;				// view-projection matrix (world -> clip)
+	mat4 viewProjectionMatInverse;		// view-projection inverse matrix (clip -> world)
+	mat4 viewProjectionBiasMat;			// view projection-bias matrix (world -> biased clip)
+	mat4 viewProjectionBiasMatInverse;	// view-projection-bias inverse matrix (biased clip -> world)
+};
+
+
+uniform ubTransformStack
+{
+	ProjectorMatrixStack uCamera, uLight;
+	ModelMatrixStack uModel[16]; 
+};
+
 layout (location = 0) in vec4 aPosition;
 
 flat out int vVertexID;

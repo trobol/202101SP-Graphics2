@@ -32,6 +32,11 @@
 
 layout (location = 0) out vec4 rtFragColor;
 
+in vec2 uv;
+
+uniform sampler2D tex;
+
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE ORANGE
