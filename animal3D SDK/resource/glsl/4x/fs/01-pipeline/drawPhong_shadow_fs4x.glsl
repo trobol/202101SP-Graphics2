@@ -35,10 +35,51 @@
 
 layout (location = 0) out vec4 rtFragColor;
 
+uniform vec4 uLights_pos[4];
+uniform float uLights_radius[4];
+uniform vec4 uLights_color[4];
+uniform sampler2D uImage00;
+uniform vec4 uColor;
 uniform int uCount;
+uniform sampler2D uShadowMap;
+
+in vec4 vNormal;
+in vec2 vTexcoord;
+in vec4 vPosition;
+in vec4 vShadowcoord;
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE MAGENTA
-	rtFragColor = vec4(1.0, 0.0, 1.0, 1.0);
+	vec3 light;
+	for(int i = 0; i < 4; i++) {
+		
+		// from opengl blue book
+		vec3 N = vNormal.xyz;
+		vec3 L = uLights_pos[i].xyz - vPosition.xyz;
+		vec3 V = - vPosition.xyz;
+
+		float dist = length(L);
+
+		// Normalize all three vectors
+		N = normalize(N);
+		L = normalize(L);
+		V = normalize(V);
+
+		vec3 R = reflect(-L, N);
+
+		// source: https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
+		// this is allegedly the formula unity uses
+		float a = dist/uLights_radius[i] * 5;
+		float attenuation = 1.0/ ((a*a) + 1);
+		float diffuse = max(dot(N, L), 0) * attenuation;
+		float specular = pow(max(dot(R, V), 0.0), 128) * attenuation;
+		float ambient = 0;
+		light += diffuse + specular * uLights_color[i].rgb ;
+	}
+
+
+	vec4 color = texture2D(uImage00, vTexcoord);
+	color *= uColor;
+	color.xyz *= light;
+	rtFragColor = color;
 }
