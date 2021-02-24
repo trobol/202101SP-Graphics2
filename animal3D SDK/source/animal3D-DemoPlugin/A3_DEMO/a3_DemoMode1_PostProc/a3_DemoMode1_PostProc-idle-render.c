@@ -374,7 +374,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 		currentSceneObject <= endSceneObject; ++currentSceneObject)
 	{
 		j = currentSceneObject->sceneHierarchyIndex;
-		
+
 		// activate texture maps
 		a3textureActivate(texture_dm[j], a3tex_unit00);
 		a3textureActivate(texture_sm[j], a3tex_unit01);
@@ -422,7 +422,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//	-> uncomment first post-processing pass
 	//	-> implement bloom pipeline following the above algorithm
 	//		(hint: this is the entirety of the first bright pass)
-	
+
 	//Bright Pass, Half Size
 	currentDemoProgram = demoState->prog_postBright;
 	a3shaderProgramActivate(currentDemoProgram->program);
@@ -434,8 +434,8 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//Blur pass (Horizontal), Half Size
 	currentDemoProgram = demoState->prog_postBlur;
 	a3shaderProgramActivate(currentDemoProgram->program);
-	
-	pixelSize.x = 1.0f / (float)currentWriteFBO->frameWidth;
+
+	pixelSize.x = 2.0f / (float)currentWriteFBO->frameWidth;
 	pixelSize.y = 0.0f;
 	a3shaderUniformSendFloat(a3unif_vec2, currentDemoProgram->uAxis, 1, pixelSize.v);
 	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit00, 0);
@@ -517,20 +517,11 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//Final pass: activate color from scene and the 3 blur results
 	currentDemoProgram = demoState->prog_postBlend;
 	a3shaderProgramActivate(currentDemoProgram->program);
-	currentWriteFBO = writeFBO[postproc_renderPassScene];
-	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit00, 0);
-	currentWriteFBO = writeFBO[postproc_renderPassBlurV2];
-	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit01, 0);
-	currentWriteFBO = writeFBO[postproc_renderPassBlurH2];
-	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit01, 0);
-	currentWriteFBO = writeFBO[postproc_renderPassBlurH4];
-	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit01, 0);
-	currentWriteFBO = writeFBO[postproc_renderPassBlurV4];
-	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit02, 0);
-	currentWriteFBO = writeFBO[postproc_renderPassBlurV8];
-	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit01, 0);
-	currentWriteFBO = writeFBO[postproc_renderPassBlurV8];
-	a3framebufferBindColorTexture(currentWriteFBO, a3tex_unit03, 0);
+	a3framebufferBindColorTexture(writeFBO[postproc_renderPassScene], a3tex_unit00, 0);
+	a3framebufferBindColorTexture(writeFBO[postproc_renderPassBlurV2], a3tex_unit01, 0);
+	a3framebufferBindColorTexture(writeFBO[postproc_renderPassBlurV4], a3tex_unit02, 0);
+	a3framebufferBindColorTexture(writeFBO[postproc_renderPassBlurV8], a3tex_unit03, 0);
+
 	currentWriteFBO = writeFBO[postproc_renderPassDisplay];
 	a3framebufferActivate(currentWriteFBO);
 	a3vertexDrawableRenderActive();
