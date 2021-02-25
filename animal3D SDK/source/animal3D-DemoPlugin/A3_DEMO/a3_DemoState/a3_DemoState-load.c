@@ -28,6 +28,8 @@
 	****************************************************
 */
 
+// Thornton Fernbacher & Alex Jaeger
+
 #include "../_a3_demo_utilities/a3_DemoMacros.h"
 
 

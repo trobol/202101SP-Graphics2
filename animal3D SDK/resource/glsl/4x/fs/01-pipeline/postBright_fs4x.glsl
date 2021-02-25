@@ -22,6 +22,7 @@
 	Bright pass filter.
 */
 
+// Thornton Fernbacher
 #version 450
 
 // ****DONE:

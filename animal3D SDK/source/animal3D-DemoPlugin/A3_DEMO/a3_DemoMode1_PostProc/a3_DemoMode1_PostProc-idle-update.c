@@ -28,6 +28,7 @@
 
 //-----------------------------------------------------------------------------
 
+// Thornton Fernbacher
 #include "../a3_DemoMode1_PostProc.h"
 
 //typedef struct a3_DemoState a3_DemoState;
@@ -38,6 +39,7 @@
 
 //-----------------------------------------------------------------------------
 // UPDATE
+
 
 void a3postproc_update_graphics(a3_DemoState* demoState, a3_DemoMode1_PostProc* demoMode)
 {

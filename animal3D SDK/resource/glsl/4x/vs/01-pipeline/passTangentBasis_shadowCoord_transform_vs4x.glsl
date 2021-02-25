@@ -20,8 +20,10 @@
 	
 	passTangentBasis_shadowCoord_transform_vs4x.glsl
 	Calculate and pass tangent basis, and shadow coordinate.
+
 */
 
+// Thornton Fernbacher
 #version 450
 
 // ****DONE:
@@ -41,6 +43,8 @@
 //		the light's point of view
 //		(hint: transformation sequence is model-view-projection-bias)
 //	-> declare and write varying for shadow coordinate
+
+
 
 // matrix stack for a single scene object/model
 struct sModelMatrixStack
