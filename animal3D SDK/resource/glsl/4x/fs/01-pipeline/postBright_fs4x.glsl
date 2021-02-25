@@ -32,16 +32,23 @@
 
 layout (location = 0) out vec4 rtFragColor;
 
-in vec2 vTexCoord;
+in vec4 vTexcoord_atlas;
+
+// from blue book
+float bloom_thresh_min = 0.1;
+float bloom_thresh_max = 1.1;
 
 uniform sampler2D uTex_dm;
 
 void main()
 {
-	vec3 color = texture(uTex_dm, vTexCoord).rgb;
-	// relative luminance
-	float luminance = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+	vec3 color = texture(uTex_dm, vTexcoord_atlas.xy).rgb;
 
-	//rtFragColor = vec4(color * (luminance * luminance), 1);
-	rtFragColor = vec4(0.0, 1.0, 0.5, 1.0);
+	// relative luminance 
+	// from blue book
+	float luminance = dot(color, vec3(0.299, 0.587, 0.144));
+
+	float a = smoothstep(bloom_thresh_min, bloom_thresh_max, luminance);
+	rtFragColor = vec4(color * 4.0 * a, 1.0);
+
 }
