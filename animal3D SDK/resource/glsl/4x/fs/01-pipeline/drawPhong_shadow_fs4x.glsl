@@ -51,6 +51,7 @@ uniform ubLight {
 };
 
 
+
 in vec4 vNormal;
 in vec4 vPosition;
 
@@ -91,9 +92,15 @@ void main()
 
 	vec4 shadowCoord = vShadowCoord / vShadowCoord.w;
 	vec4 shadowSample = texture(uTex_shadow, shadowCoord.xy);
-	float shadow = float(shadowSample.r > shadowCoord.z - 0.0001);
 
-	light.xyz *= shadow;
+	//http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/
+	float bias = 0.005;
+	float visibility = 1.0;
+	if ( shadowSample.r  <  shadowCoord.z-bias){
+		visibility = 0.4;
+	}
+
+	light.xyz *= visibility;
 	rtFragColor = vec4( light, 1);
 
 }

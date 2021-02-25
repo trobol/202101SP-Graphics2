@@ -22,6 +22,7 @@
 	Bright pass filter.
 */
 
+// Thornton Fernbacher
 #version 450
 
 // ****DONE:
@@ -43,7 +44,7 @@ void main()
 	// relative luminance 
 	// from blue book
 	float luminance = dot(color, vec3(0.299, 0.587, 0.144));
-	float a = luminance * luminance * ( 3.0 - (2*luminance));
-	//float a = smoothstep(bloom_thresh_min, bloom_thresh_max, luminance);
-	rtFragColor = vec4(color * a , 1.0);
+	float lum_sqr = luminance * luminance;
+	float amp =  ( 3.0 - (2*luminance)) * lum_sqr;
+	rtFragColor = vec4(color * amp, 1.0);
 }
