@@ -235,6 +235,9 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//	-> add pointer to target FBO for each pass
 	//		(hint: choose the most relevant one for each; all are unique)
 	// framebuffer target for each pass
+
+	//Alex Jaeger
+
 	const a3_Framebuffer* writeFBO[postproc_renderPass_max] = {
 		demoState->fbo_d32,					//Shadow pass
 		demoState->fbo_c16x4_d24s8,			//scene
@@ -422,6 +425,8 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//	-> uncomment first post-processing pass
 	//	-> implement bloom pipeline following the above algorithm
 	//		(hint: this is the entirety of the first bright pass)
+	
+	//Alex Jaeger
 
 	//Bright Pass, Half Size
 	currentDemoProgram = demoState->prog_postBright;

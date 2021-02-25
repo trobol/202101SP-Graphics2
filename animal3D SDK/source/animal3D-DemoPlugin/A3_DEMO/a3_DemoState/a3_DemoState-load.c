@@ -865,6 +865,9 @@ void a3demo_loadFramebuffers(a3_DemoState* demoState)
 	//		-> set of full-size MRT-color only
 	//		-> set of half/quarter/eighth-size color only
 	// initialize framebuffers: MRT, color and depth formats, size
+
+	//Alex Jaeger
+
 	fbo = demoState->fbo_c16x4_d24s8; // scene
 	a3framebufferCreate(fbo, "fbo:c16x4:d24s8", 4, a3fbo_colorRGBA16, a3fbo_depth24_stencil8, frameWidth1, frameHeight1); //MRT-color/depth/stencil combo
 
