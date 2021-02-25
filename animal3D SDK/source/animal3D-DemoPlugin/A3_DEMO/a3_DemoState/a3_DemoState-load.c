@@ -875,25 +875,25 @@ void a3demo_loadFramebuffers(a3_DemoState* demoState)
 	a3framebufferCreate(fbo, "fbo:d32", 0, a3fbo_colorDisable, a3fbo_depth32, shadowMapSize, shadowMapSize); //depth only
 
 	fbo = demoState->fbo_c16_szHalf + 0;		//Bright half
-	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
 	fbo = demoState->fbo_c16_szHalf + 1;		//blur H half
-	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
 	fbo = demoState->fbo_c16_szHalf + 2;		//blur V half
-	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szHalf", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth2, frameHeight2); //half-size MRT-color only
 
 	fbo = demoState->fbo_c16_szQuarter + 0;	//bright quarter
-	a3framebufferCreate(fbo, "fbo:c16:szQuarter", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth4, frameHeight4); //quarter-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szQuarter", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth4, frameHeight4); //quarter-size MRT-color only
 	fbo = demoState->fbo_c16_szQuarter + 1; //blur H quarter
-	a3framebufferCreate(fbo, "fbo:c16:szQuarter", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth4, frameHeight4); //quarter-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szQuarter", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth4, frameHeight4); //quarter-size MRT-color only
 	fbo = demoState->fbo_c16_szQuarter + 2;	//blur V quarter
-	a3framebufferCreate(fbo, "fbo:c16:szQuarter", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth4, frameHeight4); //quarter-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szQuarter", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth4, frameHeight4); //quarter-size MRT-color only
 
 	fbo = demoState->fbo_c16_szEighth + 0;	//bright eighth
-	a3framebufferCreate(fbo, "fbo:c16:szEighth", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth8, frameHeight8); //eigth-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szEighth", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth8, frameHeight8); //eigth-size MRT-color only
 	fbo = demoState->fbo_c16_szEighth + 1;	//blur H eighth
-	a3framebufferCreate(fbo, "fbo:c16:szEighth", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth8, frameHeight8); //eigth-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szEighth", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth8, frameHeight8); //eigth-size MRT-color only
 	fbo = demoState->fbo_c16_szEighth + 2;	//blur V eighth
-	a3framebufferCreate(fbo, "fbo:c16:szEighth", 1, a3fbo_colorRGBA16, a3fbo_depthDisable, frameWidth8, frameHeight8); //eigth-size MRT-color only
+	a3framebufferCreate(fbo, "fbo:c16:szEighth", 1, a3fbo_colorRGBA32F, a3fbo_depthDisable, frameWidth8, frameHeight8); //eigth-size MRT-color only
 
 
 	fbo = demoState->fbo_c16x4;				//composition

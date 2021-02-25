@@ -34,10 +34,6 @@ layout (location = 0) out vec4 rtFragColor;
 
 in vec4 vTexcoord_atlas;
 
-// from blue book
-float bloom_thresh_min = 0.3;
-float bloom_thresh_max = 1.3;
-
 uniform sampler2D uTex_dm;
 
 void main()
@@ -49,6 +45,5 @@ void main()
 	float luminance = dot(color, vec3(0.299, 0.587, 0.144));
 	float a = luminance * luminance * ( 3.0 - (2*luminance));
 	//float a = smoothstep(bloom_thresh_min, bloom_thresh_max, luminance);
-	rtFragColor = vec4(color * a, 1.0);
-
+	rtFragColor = vec4(color * a , 1.0);
 }
