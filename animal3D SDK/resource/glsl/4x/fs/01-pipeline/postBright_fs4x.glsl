@@ -24,7 +24,7 @@
 
 #version 450
 
-// ****TO-DO:
+// ****DONE:
 //	-> declare texture coordinate varying and input texture
 //	-> implement relative luminance function
 //	-> implement simple "tone mapping" such that the brightest areas of the 
@@ -35,8 +35,8 @@ layout (location = 0) out vec4 rtFragColor;
 in vec4 vTexcoord_atlas;
 
 // from blue book
-float bloom_thresh_min = 0.1;
-float bloom_thresh_max = 1.1;
+float bloom_thresh_min = 0.3;
+float bloom_thresh_max = 1.3;
 
 uniform sampler2D uTex_dm;
 
@@ -47,8 +47,8 @@ void main()
 	// relative luminance 
 	// from blue book
 	float luminance = dot(color, vec3(0.299, 0.587, 0.144));
-
-	float a = smoothstep(bloom_thresh_min, bloom_thresh_max, luminance);
-	rtFragColor = vec4(color * 4.0 * a, 1.0);
+	float a = luminance * luminance * ( 3.0 - (2*luminance));
+	//float a = smoothstep(bloom_thresh_min, bloom_thresh_max, luminance);
+	rtFragColor = vec4(color * a, 1.0);
 
 }

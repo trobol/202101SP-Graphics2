@@ -24,7 +24,7 @@
 
 #version 450
 
-// ****TO-DO:
+// ****DONE:
 //	-> declare texture coordinate varying and input texture
 //	-> declare sampling axis uniform (see render code for clue)
 //	-> declare Gaussian blur function that samples along one axis

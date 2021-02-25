@@ -24,7 +24,7 @@
 
 #version 450
 
-// ****TO-DO:
+// ****DONE:
 // 1) Phong shading
 //	-> identical to outcome of last project
 // 2) shadow mapping
@@ -80,7 +80,7 @@ void main()
 
 		// source: https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
 		// this is allegedly the formula unity uses
-		float a = dist/uLights[i].radius * 5;
+		float a = dist/uLights[i].radius * 3;
 		float attenuation = 1.0/ ((a*a) + 1);
 		float diffuse = max(dot(N, L), 0)  * attenuation;
 		float specular = pow(max(dot(R, V), 0.0), 128) * attenuation;
@@ -91,9 +91,9 @@ void main()
 
 	vec4 shadowCoord = vShadowCoord / vShadowCoord.w;
 	vec4 shadowSample = texture(uTex_shadow, shadowCoord.xy);
-	float shadowTest = float(shadowSample.r > shadowCoord.z - 0.0001);
+	float shadow = float(shadowSample.r > shadowCoord.z - 0.0001);
 
-	light.xyz *= shadowTest;
+	light.xyz *= shadow;
 	rtFragColor = vec4( light, 1);
 
 }

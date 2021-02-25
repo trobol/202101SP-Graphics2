@@ -24,7 +24,7 @@
 
 #version 450
 
-// ****TO-DO:
+// ****DONE:
 // 1) core transformation and lighting setup:
 //	-> declare data structures for projector and model matrix stacks
 //		(hint: copy and slightly modify demo object descriptors)
