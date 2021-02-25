@@ -30,6 +30,8 @@
 //	-> declare Gaussian blur function that samples along one axis
 //		(hint: the efficiency of this is described in class)
 
+//Alex Jaeger
+
 layout (location = 0) out vec4 rtFragColor;
 
 in vec4 vTexcoord_atlas;
