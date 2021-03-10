@@ -24,6 +24,9 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> comment out dummy content; this shader should literally do nothing
+
 void main()
 {
 	// DUMMY OUTPUT: center of near plane

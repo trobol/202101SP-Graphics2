@@ -25,6 +25,19 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> declare varying data to read from vertex shader
+//		(hint: it's an array this time, one per vertex in primitive)
+//	-> use vertex data to generate lines that highlight the input triangle
+//		-> wireframe: one at each corner, then one more at the first corner to close the loop
+//		-> vertex tangents: for each corner, new vertex at corner and another extending away 
+//			from it in the direction of each basis (tangent, bitangent, normal)
+//		-> face tangents: ditto but at the center of the face; need to calculate new bases
+//	-> call "EmitVertex" whenever you're done with a vertex
+//		(hint: every vertex needs gl_Position set)
+//	-> call "EndPrimitive" to finish a new line and restart
+//	-> experiment with different geometry effects
+
 // (2 verts/axis * 3 axes/basis * (3 vertex bases + 1 face basis) + 4 to 8 wireframe verts = 28 to 32 verts)
 #define MAX_VERTICES 32
 

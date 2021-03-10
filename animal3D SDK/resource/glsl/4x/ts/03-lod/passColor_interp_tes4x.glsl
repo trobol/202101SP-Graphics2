@@ -24,7 +24,16 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> declare uniform block for spline waypoint and handle data
+//	-> implement spline interpolation algorithm based on scene object's path
+//	-> interpolate along curve using correct inputs and project result
+
 layout (isolines, equal_spacing) in;
+
+uniform mat4 uP;
+
+out vec4 vColor;
 
 void main()
 {

@@ -24,7 +24,12 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> set tessellation levels, adjust as needed
+
 layout (vertices = 2) out;
+
+uniform vec2 uLevelOuter;
 
 void main()
 {

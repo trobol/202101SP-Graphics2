@@ -24,7 +24,19 @@
 
 #version 450
 
+// ****TO-DO: 
+//	-> declare inbound and outbound varyings to pass along vertex data
+//		(hint: inbound matches VS naming but is now an array)
+//		(hint: outbound matches TES naming and is also an array)
+//	-> copy varying data from input to output
+//		(hint: read the documentation for tessellation for key terms)
+//	-> set tessellation levels, adjust as needed
+//		(hint: feel free to ignore the uniforms and experiment)
+
 layout (vertices = 3) out;
+
+uniform vec3 uLevelOuter;
+uniform float uLevelInner;
 
 void main()
 {
