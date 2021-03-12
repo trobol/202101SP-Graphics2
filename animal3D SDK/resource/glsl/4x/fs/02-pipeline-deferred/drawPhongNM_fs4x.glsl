@@ -26,7 +26,7 @@
 
 #define MAX_LIGHTS 1024
 
-// ****TO-DO:
+// ****DONE:
 //	-> declare view-space varyings from vertex shader
 //	-> declare point light data structure and uniform block
 //	-> declare uniform samplers (diffuse, specular & normal maps)
@@ -36,7 +36,21 @@
 //	-> implement loop in main to calculate and accumulate light
 //	-> calculate and output final Phong sum
 
+struct sPointLight {
+	vec4 pos, worldPos, color, radiusInfo;
+};
+
+uniform ubLight {
+	sPointLight uPointLight[MAX_LIGHTS];
+};
+
+uniform sampler2D uImage00; //Diffuse
+uniform sampler2D uImage01; //Specular
+uniform sampler2D uImage02; //normal
+uniform sampler2D uImage03; //height
+
 uniform int uCount;
+uniform mat4 uPB_inv;
 
 layout (location = 0) out vec4 rtFragColor;
 
@@ -60,8 +74,55 @@ void calcPhongPoint(
 	in vec4 lightPos, in vec4 lightRadiusInfo, in vec4 lightColor
 );
 
+in vec4 vPosition;
+in vec4 vNormal;
+in vec4 vTexcoord;
+in vec4 vTangent;
+in vec4 vBiTangent;
+
+
+
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE MAGENTA
-	rtFragColor = vec4(1.0, 0.0, 1.0, 1.0);
+	vec4 diffuseSample = texture(uImage00, vTexcoord.xy);
+	vec4 specularSample = texture(uImage01, vTexcoord.xy);
+
+	// from bluebook
+	vec4 normal = normalize(vNormal);
+	vec4 tangent = normalize(vTangent);
+	vec4 bitangent = normalize(vBiTangent);
+
+
+	mat4 tangentBasis = mat4(tangent, bitangent, normal, vec4(0, 0, 0, 1));
+
+	
+	vec4 normal_sample = texture(uImage02, vTexcoord.xy);
+	normal_sample = (normal_sample - 0.5) * 2;
+	vec4 normal_view = tangentBasis * normal_sample;
+
+	vec4 position_screen = vPosition;
+	position_screen.z = texture(uImage03, position_screen.xy).r;
+
+	
+	vec4 position_view = uPB_inv * vPosition;
+	position_view = position_view / position_view.w;
+
+	vec4 diffuse = vec4(0.0);
+	vec4 specular = vec4(0.0);
+
+	for (int i = 0; i < uCount; i++) {
+		vec4 diffuseColor, specularColor;
+		vec4 eyeVec = normalize(vec4(0, 0, 0, 1) - position_view);
+
+		calcPhongPoint(diffuseColor, specularColor, eyeVec,
+			position_view, normal_view, vec4(1.0),
+			uPointLight[i].pos, uPointLight[i].radiusInfo, uPointLight[i].color);
+
+		diffuse += diffuseColor;
+		specular += specularColor;
+	}
+
+
+	rtFragColor = diffuseSample * diffuse + specularSample * specular;
+	rtFragColor.a = diffuseSample.a;
 }

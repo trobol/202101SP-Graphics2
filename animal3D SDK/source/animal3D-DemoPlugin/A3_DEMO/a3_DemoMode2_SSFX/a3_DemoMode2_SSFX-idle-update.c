@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoMode2_SSFX-idle-update.c
 	Demo mode implementations: animation scene.
 
@@ -41,14 +41,15 @@
 
 void a3ssfx_update_graphics(a3_DemoState* demoState, a3_DemoMode2_SSFX* demoMode)
 {
-	// ****TO-DO:
+	// ****DONE:
 	//	-> uncomment transformation and light data uploads
 	//	-> add line to upload light transformations
 	//		(hint: just individual matrices, see scene update)
-/*	// upload
+	// upload
 	a3bufferRefillOffset(demoState->ubo_transform, 0, 0, sizeof(demoMode->modelMatrixStack), demoMode->modelMatrixStack);
 	a3bufferRefillOffset(demoState->ubo_light, 0, 0, sizeof(demoMode->pointLightData), demoMode->pointLightData);
-	//...*/
+	//...
+	a3bufferRefillOffset(demoState->ubo_mvp, 0, 0, sizeof(demoMode->pointLightMVP), demoMode->pointLightMVP);
 }
 
 void a3ssfx_update_scene(a3_DemoState* demoState, a3_DemoMode2_SSFX* demoMode, a3f64 const dt)
@@ -123,13 +124,24 @@ void a3ssfx_update_scene(a3_DemoState* demoState, a3_DemoMode2_SSFX* demoMode, a
 			projector->sceneObjectPtr->modelMatrixStackPtr->modelMatInverse.m,
 			pointLightData->worldPos.v);
 
-		// ****TO-DO:
+		// ****DONE:
 		//	-> calculate light transformation
 		//		(hint: in the previous line, we calculate the view-space position)
 		//		(hint: determine the scale part, append position and multiply by 
 		//			projection matrix to arrive at a proper MVP for each light)
-	/*	// update and transform light matrix
-		//...*/
+		// update and transform light matrix
+		//...
+
+
+		a3mat4 model;
+		a3real4x4SetScale(model.m, pointLightData->radius);
+		model.v3 = pointLightData->worldPos;
+
+
+		a3mat4 modelView;
+		a3real4x4ProductTransform(modelView.m, projector->sceneObjectPtr->modelMatrixStackPtr->modelMatInverse.m, model.m);
+		a3real4x4Product(pointLightMVP->m, projector->projectorMatrixStackPtr->projectionMat.m, modelView.m);
+
 	}
 }
 

@@ -26,7 +26,7 @@
 
 #define MAX_LIGHTS 1024
 
-// ****TO-DO:
+// ****DONE:
 //	-> declare biased clip coordinate varying from vertex shader
 //	-> declare point light data structure and uniform block
 //	-> declare pertinent samplers with geometry data ("g-buffers")
@@ -39,10 +39,49 @@
 
 flat in int vInstanceID;
 
-layout (location = 0) out vec4 rtFragColor;
+struct sPointLight {
+	vec4 pos, worldPos, color, radiusInfo;
+};
+
+uniform ubLight {
+	sPointLight uPointLight[MAX_LIGHTS];
+};
+
+layout (location = 0) out vec4 rtFragDiffuse;
+layout (location = 1) out vec4 rtFragSpecular;
+
+uniform sampler2D uImage04;	//normal
+uniform sampler2D uImage05;	//depth
+uniform mat4 uPB_inv;
+uniform vec4 uColor;
+
+in vec4 vPosition_screen;
+void calcPhongPoint(out vec4 diffuseColor, out vec4 specularColor, in vec4 eyeVec,
+	in vec4 fragPos, in vec4 fragNrm, in vec4 fragColor,
+	in vec4 lightPos, in vec4 lightRadiusInfo, in vec4 lightColor);
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE MAGENTA
-	rtFragColor = vec4(1.0, 0.0, 1.0, 1.0);
+	vec4 position_screen = vPosition_screen / vPosition_screen.w;
+	position_screen.z = texture(uImage05, position_screen.xy).r;
+
+	vec4 normal = texture(uImage04, position_screen.xy);
+	normal = (normal - 0.5) * 2;
+
+
+	vec4 position_view = uPB_inv * position_screen;
+	position_view = position_view / position_view.w;
+
+	vec4 eyeVec = normalize(vec4(0, 0, 0, 1) - position_view);
+	
+	vec4 diffuseColor, specularColor;
+	int i = vInstanceID;
+
+	calcPhongPoint(diffuseColor, specularColor, eyeVec,
+		position_view, normal, vec4(1),
+		uPointLight[i].pos, uPointLight[i].radiusInfo, uPointLight[i].color);
+
+
+	rtFragDiffuse = diffuseColor;
+	rtFragSpecular = specularColor;
 }

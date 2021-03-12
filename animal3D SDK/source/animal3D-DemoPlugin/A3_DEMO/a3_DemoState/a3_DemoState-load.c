@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_loading.c/.cpp
 	Demo state function implementations.
 
@@ -101,7 +101,7 @@ a3real4x4r a3demo_setAtlasTransform_internal(a3real4x4p m_out,
 
 
 // initialize dummy drawable
-inline void a3demo_initDummyDrawable_internal(a3_DemoState *demoState)
+inline void a3demo_initDummyDrawable_internal(a3_DemoState* demoState)
 {
 	// dummy drawable for point drawing: copy any of the existing ones, 
 	//	set vertex count to 1 and primitive to points (0x0000)
@@ -148,12 +148,12 @@ inline void a3demo_initDummyDrawable_internal(a3_DemoState *demoState)
 // LOADING
 
 // utility to load geometry
-void a3demo_loadGeometry(a3_DemoState *demoState)
+void a3demo_loadGeometry(a3_DemoState* demoState)
 {
 	// tmp descriptor for loaded model
 	typedef struct a3_TAG_DEMOSTATELOADEDMODEL {
-		const a3byte *modelFilePath;
-		const a3real *transform;
+		const a3byte* modelFilePath;
+		const a3real* transform;
 		a3_ModelLoaderFlag flag;
 	} a3_DemoStateLoadedModel;
 
@@ -172,9 +172,9 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	};
 
 	// pointer to shared vbo/ibo
-	a3_VertexBuffer *vbo_ibo;
-	a3_VertexArrayDescriptor *vao;
-	a3_VertexDrawable *currentDrawable;
+	a3_VertexBuffer* vbo_ibo;
+	a3_VertexArrayDescriptor* vao;
+	a3_VertexDrawable* currentDrawable;
 	a3ui32 sharedVertexStorage = 0, sharedIndexStorage = 0;
 	a3ui32 numVerts = 0;
 	a3ui32 i;
@@ -182,7 +182,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 	// file streaming (if requested)
 	a3_FileStream fileStream[1] = { 0 };
-	const a3byte *const geometryStream = "./data/gpro_base_geom.dat";
+	const a3byte* const geometryStream = "./data/gpro_base_geom.dat";
 
 	// geometry data
 	a3_GeometryData displayShapesData[2] = { 0 };
@@ -194,7 +194,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 	// common index format
 	a3_IndexFormatDescriptor sceneCommonIndexFormat[1] = { 0 };
-	a3ui32 bufferOffset, *const bufferOffsetPtr = &bufferOffset;
+	a3ui32 bufferOffset, * const bufferOffsetPtr = &bufferOffset;
 
 
 	// procedural scene objects
@@ -355,7 +355,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 
 // utility to load shaders
-void a3demo_loadShaders(a3_DemoState *demoState)
+void a3demo_loadShaders(a3_DemoState* demoState)
 {
 	// structure to help with shader management
 	typedef struct a3_TAG_DEMOSTATESHADER {
@@ -368,7 +368,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	} a3_DemoStateShader;
 
 	// direct to demo programs
-	a3_DemoStateShaderProgram *currentDemoProg;
+	a3_DemoStateShaderProgram* currentDemoProg;
 	a3i32 flag;
 	a3ui32 i;
 
@@ -477,8 +477,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 
 			// gs
 			// 00-common
-			{ { { 0 },	"shdr-gs:draw-tb",					a3shader_geometry,	2,{ A3_DEMO_GS"00-common/e/drawTangentBasis_gs4x.glsl",
-																					A3_DEMO_GS"00-common/e/utilCommon_gs4x.glsl",} } },
+			{ { { 0 },	"shdr-gs:draw-tb",					a3shader_geometry,	2,{ A3_DEMO_GS"00-common/e/drawTangentBasis_gs4x.glsl", A3_DEMO_GS"00-common/e/utilCommon_gs4x.glsl",} } },
 
 			// fs
 			// base
@@ -488,14 +487,13 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			{ { { 0 },	"shdr-fs:draw-tex",					a3shader_fragment,	1,{ A3_DEMO_FS"00-common/drawTexture_fs4x.glsl" } } }, // ****DONE
 			{ { { 0 },	"shdr-fs:draw-Lambert",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawLambert_fs4x.glsl",
 																					A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
-			{ { { 0 },	"shdr-fs:draw-Phong",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawPhong_fs4x.glsl",
-																					A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
+			{ { { 0 },	"shdr-fs:draw-Phong",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawPhong_fs4x.glsl", A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",}}},
+
 			// 01-pipeline
 			{ { { 0 },	"shdr-fs:post-bright",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/e/postBright_fs4x.glsl" } } },
 			{ { { 0 },	"shdr-fs:post-blur",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/e/postBlur_fs4x.glsl" } } },
 			{ { { 0 },	"shdr-fs:post-blend",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/e/postBlend_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-shadow",		a3shader_fragment,	2,{ A3_DEMO_FS"01-pipeline/e/drawPhong_shadow_fs4x.glsl",
-																					A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
+			{ { { 0 },	"shdr-fs:draw-Phong-shadow",		a3shader_fragment,	2,{ A3_DEMO_FS"01-pipeline/e/drawPhong_shadow_fs4x.glsl", A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
 			// 02-pipeline-deferred
 			{ { { 0 },	"shdr-fs:post-defer-comp",			a3shader_fragment,	1,{ A3_DEMO_FS"02-pipeline-deferred/postDeferredLightingComposite_fs4x.glsl" } } }, // ****DECODE
 			{ { { 0 },	"shdr-fs:post-Phong-defer",			a3shader_fragment,	2,{ A3_DEMO_FS"02-pipeline-deferred/postDeferredShading_fs4x.glsl", // ****DECODE
@@ -507,7 +505,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 																					A3_DEMO_FS"00-common/utilCommon_fs4x.glsl",} } }, // ****DONE
 		}
 	};
-	a3_DemoStateShader *const shaderListPtr = (a3_DemoStateShader *)(&shaderList), *shaderPtr;
+	a3_DemoStateShader* const shaderListPtr = (a3_DemoStateShader*)(&shaderList), * shaderPtr;
 	const a3ui32 numUniqueShaders = sizeof(shaderList) / sizeof(a3_DemoStateShader);
 
 
@@ -786,7 +784,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 
 // utility to load textures
 void a3demo_loadTextures(a3_DemoState* demoState)
-{	
+{
 	// indexing
 	a3_Texture* tex;
 	a3ui32 i;
@@ -1006,7 +1004,7 @@ void a3demo_loadFramebuffers(a3_DemoState* demoState)
 //-----------------------------------------------------------------------------
 
 // internal utility for refreshing drawable
-inline void a3_refreshDrawable_internal(a3_VertexDrawable *drawable, a3_VertexArrayDescriptor *vertexArray, a3_IndexBuffer *indexBuffer)
+inline void a3_refreshDrawable_internal(a3_VertexDrawable* drawable, a3_VertexArrayDescriptor* vertexArray, a3_IndexBuffer* indexBuffer)
 {
 	drawable->vertexArray = vertexArray;
 	if (drawable->indexType)

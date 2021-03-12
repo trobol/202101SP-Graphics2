@@ -24,7 +24,7 @@
 
 #version 450
 
-// ****TO-DO:
+// ****DONE:
 //	-> declare view-space varyings from vertex shader
 //	-> declare MRT for pertinent surface data (incoming attribute info)
 //		(hint: at least normal and texcoord are needed)
@@ -32,10 +32,36 @@
 //	-> calculate final normal
 //	-> output pertinent surface data
 
-layout (location = 0) out vec4 rtFragColor;
+layout (location = 0) out vec4 rtTexcoord;
+layout (location = 1) out vec4 rtNormal;
+layout (location = 3) out vec4 rtPosition;
+
+in vec4 vPosition;
+in vec4 vNormal;
+in vec4 vTexcoord;
+in vec4 vTangent;
+in vec4 vBiTangent;
+
+in vec4 vPosition_screen;
+
+uniform sampler2D uImage02;
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE MAGENTA
-	rtFragColor = vec4(1.0, 0.0, 1.0, 1.0);
+
+
+	// from bluebook
+	vec4 normal = normalize(vNormal);
+	vec4 tangent = normalize(vTangent);
+	vec4 bitangent = normalize(vBiTangent);
+
+	mat4 tangentBasis = mat4(tangent, bitangent, normal, vec4(0, 0, 0, 1));
+
+	vec4 normal_sample = texture(uImage02, vTexcoord.xy);
+	normal_sample = (normal_sample - 0.5) * 2;
+	vec4 normal_view = tangentBasis * normal_sample;
+	
+	rtNormal = vec4((normal_view.xyz * 0.5) + 0.5, 1.0);
+	rtTexcoord = vTexcoord;
+	rtPosition = vPosition / vPosition.w;
 }

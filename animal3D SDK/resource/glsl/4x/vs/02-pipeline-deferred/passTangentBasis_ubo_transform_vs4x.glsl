@@ -26,7 +26,7 @@
 
 #define MAX_OBJECTS 128
 
-// ****TO-DO:
+// ****DONE:
 //	-> declare attributes related to lighting
 //		(hint: normal [2], texcoord [8], tangent [10], bitangent [11])
 //	-> declare view-space varyings related to lighting
@@ -36,6 +36,10 @@
 //		(hint: texcoord transformed to atlas coordinates in a similar fashion)
 
 layout (location = 0) in vec4 aPosition;
+layout (location = 2) in vec3 aNormal;
+layout (location = 8) in vec4 aTexcoord;
+layout (location = 10) in vec3 aTangent;
+layout (location = 11) in vec3 aBiTangent;
 
 struct sModelMatrixStack
 {
@@ -54,13 +58,40 @@ uniform ubTransformStack
 };
 uniform int uIndex;
 
+
+
 flat out int vVertexID;
 flat out int vInstanceID;
 
+
+out vec4 vPosition;
+out vec4 vNormal;
+out vec4 vTexcoord;
+out vec4 vTangent;
+out vec4 vBiTangent;
+
+out vec4 vPosition_screen;
+
+const mat4 bias = mat4(
+	0.5, 0.0, 0.0, 0.0,
+	0.0, 0.5, 0.0, 0.0,
+	0.0, 0.0, 0.5, 0.0,
+	0.5, 0.5, 0.5, 1.0
+);
+
 void main()
 {
-	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+
+	gl_Position = uModelMatrixStack[uIndex].modelViewProjectionMat * aPosition;
+	vPosition_screen = bias * gl_Position;
+
+
+
+	vPosition = uModelMatrixStack[uIndex].modelViewMat * aPosition;
+	vNormal = uModelMatrixStack[uIndex].modelViewMatInverseTranspose * vec4(aNormal, 0.0);
+	vTexcoord = uModelMatrixStack[uIndex].atlasMat * aTexcoord;
+	vTangent = uModelMatrixStack[uIndex].modelViewMatInverseTranspose * vec4(aTangent, 0.0);
+	vBiTangent = uModelMatrixStack[uIndex].modelViewMatInverseTranspose * vec4(aBiTangent, 0.0);
 
 	vVertexID = gl_VertexID;
 	vInstanceID = gl_InstanceID;
