@@ -115,11 +115,19 @@ void a3ssfx_update_scene(a3_DemoState* demoState, a3_DemoMode2_SSFX* demoMode, a
 	a3demo_updateSceneObject(demoMode->obj_ground, 0);
 	a3demo_updateSceneObjectStack(demoMode->obj_ground, projector);
 
+
 	// update light positions and transforms
 	for (i = 0, pointLightData = demoMode->pointLightData, pointLightMVP = demoMode->pointLightMVP;
 		i < ssfxMaxCount_pointLight;
 		++i, ++pointLightData, ++pointLightMVP)
 	{
+		float scale = 0.5f;
+		// randomly move lights in a direction
+		a3mat4 rot;
+		a3real4x4SetRotateZYX(rot.m, a3randomRange(0, scale), a3randomRange(0, scale), a3randomRange(0, scale));
+
+		a3real4Real4x4Product(pointLightData->worldPos.v, rot.m, pointLightData->worldPos.v);
+
 		a3real4Real4x4Product(pointLightData->position.v,
 			projector->sceneObjectPtr->modelMatrixStackPtr->modelMatInverse.m,
 			pointLightData->worldPos.v);
