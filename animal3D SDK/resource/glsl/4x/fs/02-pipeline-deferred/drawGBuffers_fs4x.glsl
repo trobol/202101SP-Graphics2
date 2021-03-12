@@ -45,7 +45,9 @@ in vec4 vBiTangent;
 in vec4 vPosition_screen;
 
 uniform sampler2D uImage02;
+uniform sampler2D uImage03; // height map
 
+float height_scale = 0.0005;
 void main()
 {
 
@@ -60,8 +62,15 @@ void main()
 	vec4 normal_sample = texture(uImage02, vTexcoord.xy);
 	normal_sample = (normal_sample - 0.5) * 2;
 	vec4 normal_view = tangentBasis * normal_sample;
+
+
+	
+	// from https://learnopengl.com/Advanced-Lighting/Parallax-Mapping
+    float height = texture(uImage03, vTexcoord.xy).r;    
+    vec2 tex_offset = vPosition.xy * (height * height_scale);
+	
 	
 	rtNormal = vec4((normal_view.xyz * 0.5) + 0.5, 1.0);
-	rtTexcoord = vTexcoord;
+	rtTexcoord = vec4(vTexcoord.xy - tex_offset, vTexcoord.zw);
 	rtPosition = vPosition / vPosition.w;
 }
