@@ -26,6 +26,14 @@
 
 #define MAX_OBJECTS 128
 
+// ****TO-DO: 
+//	-> declare morph target attributes
+//	-> declare and implement morph target interpolation algorithm
+//	-> declare interpolation time/param/keyframe uniform
+//	-> perform morph target interpolation using correct attributes
+//		(hint: results can be stored in local variables named after the 
+//		complete tangent basis attributes provided before any changes)
+
 layout (location = 0) in vec4 aPosition;
 layout (location = 2) in vec3 aNormal;
 layout (location = 8) in vec4 aTexcoord;

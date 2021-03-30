@@ -28,6 +28,10 @@
 
 #define MAX_COLORS 24
 
+// ****TO-DO: 
+//	-> declare hierarchy depth info in uniform block
+//	-> use hierarchy depth to select color
+
 layout (location = 0) in vec4 aPosition;
 
 uniform ubTransformMVP {
