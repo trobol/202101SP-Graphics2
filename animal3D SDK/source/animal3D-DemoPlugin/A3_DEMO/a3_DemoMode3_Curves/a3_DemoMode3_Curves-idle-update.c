@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoMode3_Curves-idle-update.c
 	Demo mode implementations: animation scene.
 
@@ -60,6 +60,86 @@ void a3curves_update_animation(a3_DemoState* demoState, a3_DemoMode3_Curves* dem
 		//		(hint: check if we've surpassed the segment's duration)
 		// teapot follows curved path
 
+		// http://paulbourke.net/miscellaneous/interpolation/
+
+		a3f32 mu = demoMode->curveSegmentTime / demoMode->curveSegmentDuration;
+		a3f32 tention = 1;
+		a3f32 bias = 1;
+
+		a3ui32 p0i = demoMode->curveSegmentIndex;
+		a3ui32 p1i = (p0i + 1) % demoMode->curveWaypointCount;
+		a3ui32 p2i = (p0i + 2) % demoMode->curveWaypointCount;
+		a3ui32 p3i = (p0i + 3) % demoMode->curveWaypointCount;
+
+		a3vec4 p0 = demoMode->curveWaypoint[p0i];
+		a3vec4 p1 = demoMode->curveWaypoint[p1i];
+		a3vec4 p2 = demoMode->curveWaypoint[p2i];
+		a3vec4 p3 = demoMode->curveWaypoint[p3i];
+
+		a3vec4 tmp;
+
+
+		a3real mu2 = mu * mu;
+
+		a3vec4 a0 = p0;
+		a3real4MulS(a0.v, -0.5);
+
+		tmp = p1;
+		a3real4MulS(tmp.v, 1.5);
+		a3real4Add(a0.v, tmp.v);
+
+		tmp = p2;
+		a3real4MulS(tmp.v, 1.5);
+		a3real4Sub(a0.v, tmp.v);
+
+		tmp = p3;
+		a3real4MulS(tmp.v, 0.5);
+		a3real4Add(a0.v, tmp.v);
+
+
+		a3vec4 a1 = p0;
+		tmp = p1;
+		a3real4MulS(tmp.v, 2.5);
+		a3real4Sub(a1.v, tmp.v);
+
+		tmp = p2;
+		a3real4MulS(tmp.v, 2);
+		a3real4Add(a1.v, tmp.v);
+
+		tmp = p3;
+		a3real4MulS(tmp.v, 0.5);
+		a3real4Sub(a1.v, tmp.v);
+
+		a3vec4 a2 = p0;
+		a3real4MulS(a2.v, -0.5);
+
+		tmp = p2;
+		a3real4MulS(tmp.v, 0.5);
+		a3real4Add(a2.v, tmp.v);
+
+		a3vec4 a3 = p1;
+
+		a3real4MulS(a0.v, mu);
+		a3real4MulS(a0.v, mu2);
+		a3real4MulS(a1.v, mu2);
+		a3real4MulS(a2.v, mu);
+
+		a3vec4 result = a0;
+		a3real4Add(result.v, a1.v);
+		a3real4Add(result.v, a2.v);
+		a3real4Add(result.v, a3.v);
+
+		sceneObjectData->position = result;
+
+
+		demoMode->curveSegmentTime += (a3f32)dt;
+
+		a3f32 remainingDuration = demoMode->curveSegmentTime - demoMode->curveSegmentDuration;
+
+		if (remainingDuration >= 0) {
+			demoMode->curveSegmentTime = remainingDuration;
+			demoMode->curveSegmentIndex = (demoMode->curveSegmentIndex + 1) % demoMode->curveWaypointCount;
+		}
 	}
 }
 

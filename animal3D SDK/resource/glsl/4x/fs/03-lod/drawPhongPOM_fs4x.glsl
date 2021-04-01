@@ -60,18 +60,47 @@ void calcPhongPoint(out vec4 diffuseColor, out vec4 specularColor, in vec4 eyeVe
 	
 vec3 calcParallaxCoord(in vec3 coord, in vec3 viewVec, const int steps)
 {
-	// ****TO-DO:
+	// ****DONE:
 	//	-> step along view vector until intersecting height map
 	//	-> determine precise intersection point, return resulting coordinate
-	
+
+	vec3 v = viewVec / viewVec.z;
+	float dt = 1.0/float(steps);
+	vec3 end = coord - (v*uSize);
+	coord.z = 1;
+	end.z = 0;
+	vec3 lastCoord = coord;
+	float lastHeight = texture(uTex_hm, coord.xy).r;;
+
+	for(int i = 0; i < steps; i++) {
+		float t = dt * i;
+		// lerp
+		vec3 c = mix(coord, end, t);
+		
+
+		float height = texture(uTex_hm, c.xy).r;
+
+		
+		if (c.z < height) {
+			// got a hit, find exact point
+			float deltaB = height - lastHeight;
+			float deltaH = c.z - lastCoord.z;
+			
+			float x = (lastHeight - lastCoord.z) / (deltaB - deltaH);
+
+			return mix(lastCoord, c, x);
+		}
+		lastCoord = c;
+		lastHeight = height;
+	}
+
 	// done
 	return coord;
 }
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
-//	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
 
 	vec4 diffuseColor = vec4(0.0), specularColor = diffuseColor, dd, ds;
 	
@@ -84,21 +113,19 @@ void main()
 	// view-space view vector
 	vec4 viewVec = normalize(kEyePos - pos_view);
 	
-	// ****TO-DO:
+	// ****DONE:
 	//	-> convert view vector into tangent space
 	//		(hint: the above TBN bases convert tangent to view, figure out 
 	//		an efficient way of representing the required matrix operation)
 	// tangent-space view vector
-	vec3 viewVec_tan = vec3(
-		0.0,
-		0.0,
-		0.0
-	);
+	mat4 TBN = transpose(mat4(tan_view, bit_view, nrm_view, vec4(0, 0, 0, 1)));
+	vec3 viewVec_tan = (TBN * viewVec).xyz;
+
 	
 	// parallax occlusion mapping
 	vec3 texcoord = vec3(vTexcoord_atlas.xy, uSize);
 	texcoord = calcParallaxCoord(texcoord, viewVec_tan, 256);
-	
+
 	// read and calculate view normal
 	vec4 sample_nm = texture(uTex_nm, texcoord.xy);
 	nrm_view = mat4(tan_view, bit_view, nrm_view, kEyePos)
@@ -123,5 +150,5 @@ void main()
 	rtFragNormal = vec4(nrm_view.xyz * 0.5 + 0.5, 1.0);
 	
 	// DEBUGGING
-	//rtFragColor.rgb = texcoord;
+	//rtFragColor.rgb = vec3(texcoord.z);
 }
