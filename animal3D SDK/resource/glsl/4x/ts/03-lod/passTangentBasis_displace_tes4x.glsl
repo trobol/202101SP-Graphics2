@@ -24,7 +24,7 @@
 
 #version 450
 
-// ****TO-DO: 
+// ****DONE: 
 //	-> declare inbound and outbound varyings to pass along vertex data
 //		(hint: inbound matches TCS naming and is still an array)
 //		(hint: outbound matches GS/FS naming and is singular)
@@ -35,7 +35,45 @@
 
 layout (triangles, equal_spacing) in;
 
+in vbVertexData_tess {
+	mat4 vTangentBasis_view;
+	vec4 vTexcoord_atlas;
+} vVertexData_tess[];
+
+out vbVertexData {
+	mat4 vTangentBasis_view;
+	vec4 vTexcoord_atlas;
+};
+
+uniform sampler2D uTex_nm, uTex_hm;
+
+uniform mat4 uP;
+
 void main()
 {
+	// from blue book
+	for(int i = 0; i < 4; i++) {
+		vTangentBasis_view[i] = ( gl_TessCoord.x *  vVertexData_tess[0].vTangentBasis_view[i] +
+								  gl_TessCoord.y *  vVertexData_tess[1].vTangentBasis_view[i] +
+								  gl_TessCoord.z *  vVertexData_tess[2].vTangentBasis_view[i]);
+	}
 	
+
+
+	vTexcoord_atlas = ( gl_TessCoord.x *  vVertexData_tess[0].vTexcoord_atlas +
+					    gl_TessCoord.y * vVertexData_tess[1].vTexcoord_atlas +
+					    gl_TessCoord.z * vVertexData_tess[2].vTexcoord_atlas);
+	
+	vec4 nrm_view = normalize(vTangentBasis_view[2]);
+	// model view mat * pos
+	vec4 pos_view = vTangentBasis_view[3];
+	
+	float height = texture(uTex_hm, vTexcoord_atlas.xy).r;
+	pos_view += nrm_view * height;
+
+
+	 vTangentBasis_view[3] = pos_view;
+	 // projection matrix
+	gl_Position = uP * pos_view;
+
 }

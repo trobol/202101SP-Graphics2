@@ -70,7 +70,7 @@ vec3 calcParallaxCoord(in vec3 coord, in vec3 viewVec, const int steps)
 	coord.z = 1;
 	end.z = 0;
 	vec3 lastCoord = coord;
-	float lastHeight = texture(uTex_hm, coord.xy).r;;
+	float lastHeight = texture(uTex_hm, coord.xy).r;
 
 	for(int i = 0; i < steps; i++) {
 		float t = dt * i;
@@ -80,7 +80,6 @@ vec3 calcParallaxCoord(in vec3 coord, in vec3 viewVec, const int steps)
 
 		float height = texture(uTex_hm, c.xy).r;
 
-		
 		if (c.z < height) {
 			// got a hit, find exact point
 			float deltaB = height - lastHeight;
@@ -90,12 +89,13 @@ vec3 calcParallaxCoord(in vec3 coord, in vec3 viewVec, const int steps)
 
 			return mix(lastCoord, c, x);
 		}
+
 		lastCoord = c;
 		lastHeight = height;
 	}
 
 	// done
-	return coord;
+	return lastCoord;
 }
 
 void main()
@@ -150,5 +150,5 @@ void main()
 	rtFragNormal = vec4(nrm_view.xyz * 0.5 + 0.5, 1.0);
 	
 	// DEBUGGING
-	//rtFragColor.rgb = vec3(texcoord.z);
+	//rtFragColor.rgb = texture(uTex_hm, texcoord.xy).rgb;
 }
