@@ -85,7 +85,7 @@ vec3 calcParallaxCoord(in vec3 coord, in vec3 viewVec, const int steps)
 			float deltaB = height - lastHeight;
 			float deltaH = c.z - lastCoord.z;
 			
-			float x = (lastHeight - lastCoord.z) / (deltaB - deltaH);
+			float x = (lastCoord.z - lastHeight) / (deltaB - deltaH);
 
 			return mix(lastCoord, c, x);
 		}

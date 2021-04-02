@@ -64,7 +64,7 @@ void a3curves_update_animation(a3_DemoState* demoState, a3_DemoMode3_Curves* dem
 		// PS: I found the function that does this but i already wrote the code so might as well show that I can
 		// http://paulbourke.net/miscellaneous/interpolation/
 
-		a3f32 mu = demoMode->curveSegmentTime / demoMode->curveSegmentDuration;
+		a3f32 mu = demoMode->curveSegmentTime * demoMode->curveSegmentDurationInv;
 		a3f32 tention = 1;
 		a3f32 bias = 1;
 
