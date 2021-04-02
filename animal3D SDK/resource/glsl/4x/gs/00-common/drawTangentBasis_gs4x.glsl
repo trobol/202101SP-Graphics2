@@ -46,6 +46,7 @@ layout (triangles) in;
 layout (line_strip, max_vertices = MAX_VERTICES) out;
 
 uniform mat4 uP;
+uniform int uFlag;
 
 in vbVertexData {
 	mat4 vTangentBasis_view;
@@ -70,14 +71,21 @@ void emitRayProj(vec4 start, vec4 dir) {
 
 void main()
 {
-	// triangle
-	for( int i = 0; i < 3; i++) {
-		vColor = vec4(0, 0, 0, 1);
-		vColor[i] = 1;
-		emitLine(gl_in[i].gl_Position, 
-		         gl_in[(i+1)%3].gl_Position);
+
+	// draw wireframe
+	if ( bitfieldExtract(uFlag, 2, 1) != 0) {
+		// triangle
+		for( int i = 0; i < 3; i++) {
+			vColor = vec4(0, 0, 0, 1);
+			vColor[i] = 1;
+			emitLine(gl_in[i].gl_Position, 
+					 gl_in[(i+1)%3].gl_Position);
+		}
 	}
 
+	// draw tangents
+
+	if ( bitfieldExtract(uFlag, 1, 1) == 0) return;
 	
 	vec4 p0 = vVertexData[0].vTangentBasis_view[3];
 	vec4 p1 = vVertexData[1].vTangentBasis_view[3];
@@ -111,6 +119,7 @@ void main()
 
 	float dv1 = tex1.y - tex0.y;
 	float dv2 = tex2.y - tex0.y;
+
 
 	mat2x3 TB = mat2x3(dp1.xyz, dp2.xyz) * inverse(mat2(du1, dv1, du2, dv2));
 

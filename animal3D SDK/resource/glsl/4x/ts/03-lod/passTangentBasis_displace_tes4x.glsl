@@ -51,7 +51,7 @@ uniform mat4 uP;
 
 void main()
 {
-	// from blue book
+	// from blue book p76
 	for(int i = 0; i < 4; i++) {
 		vTangentBasis_view[i] = ( gl_TessCoord.x *  vVertexData_tess[0].vTangentBasis_view[i] +
 								  gl_TessCoord.y *  vVertexData_tess[1].vTangentBasis_view[i] +
@@ -75,5 +75,9 @@ void main()
 	 vTangentBasis_view[3] = pos_view;
 	 // projection matrix
 	gl_Position = uP * pos_view;
+
+	gl_Position = ( gl_TessCoord.x *   gl_in[0].gl_Position +
+					    gl_TessCoord.y * gl_in[1].gl_Position +
+					    gl_TessCoord.z *  gl_in[2].gl_Position);
 
 }
