@@ -123,5 +123,5 @@ void main()
 	rtFragNormal = vec4(nrm_view.xyz * 0.5 + 0.5, 1.0);
 	
 	// DEBUGGING
-	//rtFragColor.rgb = texcoord;
+	rtFragColor.rgb = normalize(vTangentBasis_view[2]).xyz;
 }

@@ -33,12 +33,15 @@
 //	-> perform morph target interpolation using correct attributes
 //		(hint: results can be stored in local variables named after the 
 //		complete tangent basis attributes provided before any changes)
+struct sMorphTarget {
+	vec4 position;
+	vec4 normal;
+	vec4 tangent;
+};
 
-layout (location = 0) in vec4 aPosition;
-layout (location = 2) in vec3 aNormal;
-layout (location = 8) in vec4 aTexcoord;
-layout (location = 10) in vec3 aTangent;
-layout (location = 11) in vec3 aBitangent;
+layout (location = 0) in sMorphTarget aMorphTargets[5];
+layout (location = 15) in vec4 aTexcoord;
+
 
 struct sModelMatrixStack
 {
@@ -57,6 +60,11 @@ uniform ubTransformStack
 	sModelMatrixStack uModelMatrixStack[MAX_OBJECTS];
 };
 uniform int uIndex;
+uniform float uTime;
+uniform float uSize;
+uniform	vec4 uColor;
+uniform vec4 uColor0;
+uniform mat4 uP;
 
 out vbVertexData {
 	mat4 vTangentBasis_view;
@@ -70,14 +78,26 @@ void main()
 {
 	// DUMMY OUTPUT: directly assign input position to output position
 	//gl_Position = aPosition;
+	uint i0 = uint(uTime) % 5;
+	uint i1 = uint(i0 + 1) % 5;
+	float param = uTime - floor(uTime);
+	sMorphTarget t0 = aMorphTargets[i0];
+	sMorphTarget t1 = aMorphTargets[i1];
+	vec4 position = mix(t0.position, t1.position, param);
+	vec3 normal = mix(t0.normal.xyz, t1.normal.xyz, param);
+	vec3 tangent = mix(t0.tangent.xyz, t1.tangent.xyz, param);
+	vec3 biTangent= cross(normal, tangent);
+	
+
 	
 	sModelMatrixStack t = uModelMatrixStack[uIndex];
 	
-	vTangentBasis_view = t.modelViewMatInverseTranspose * mat4(aTangent, 0.0, aBitangent, 0.0, aNormal, 0.0, vec4(0.0));
-	vTangentBasis_view[3] = t.modelViewMat * aPosition;
-	gl_Position = t.modelViewProjectionMat * aPosition;
+	vTangentBasis_view = t.modelViewMatInverseTranspose * mat4(tangent, 0.0, biTangent, 0.0, normal, 0.0, vec4(0.0));
+	vTangentBasis_view[3] = t.modelViewMat * position;
+	gl_Position = t.modelViewProjectionMat * position;
 	
 	vTexcoord_atlas = t.atlasMat * aTexcoord;
+	
 
 	vVertexID = gl_VertexID;
 	vInstanceID = gl_InstanceID;

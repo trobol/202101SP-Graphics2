@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoMode4_Animate-idle-update.c
 	Demo mode implementations: animation scene.
 
@@ -69,23 +69,38 @@ inline int a3animate_updateSkeletonLocalSpace(a3_Hierarchy const* hierarchy,
 		a3ui32 const i0 = keyCtrl->index, i1 = (i0 + 1) % keyCtrl->count;
 		a3f32 u = keyCtrl->param;
 		a3_SceneObjectData const* p0 = keyPoseArray[i0 + 1], * p1 = keyPoseArray[i1 + 1], * pBase = keyPoseArray[0];
-		a3_SceneObjectData tmpPose;
-		
+
+
 		for (j = 0;
 			j < hierarchy->numNodes;
 			++j, ++p0, ++p1, ++pBase, ++localSpaceArray)
 		{
-			// testing: copy base pose
-			tmpPose = *pBase;
+			a3vec4 position, euler, scale;
 
-			// ****TO-DO:
+			// ****DONE:
 			// interpolate channels
+			a3real4Lerp(position.v, p0->position.v, p1->position.v, u);
+			a3real4Lerp(euler.v, p0->euler.v, p1->euler.v, u);
+			a3real4Lerp(scale.v, p0->scale.v, p1->scale.v, u);
 
-			// ****TO-DO:
+			// ****DONE
 			// concatenate base pose
+			a3real4Add(position.v, pBase->position.v);
+			a3real4Add(euler.v, pBase->euler.v);
+			a3real4MulComp(scale.v, pBase->scale.v);
 
-			// ****TO-DO:
+			// ****DONE:
 			// convert to matrix
+			a3real4x4SetRotateXYZ(localSpaceArray->m,
+				euler.x, euler.y, euler.z);
+			localSpaceArray->v3.xyz = position.xyz;
+			localSpaceArray->m33 = a3real_one;
+
+
+			a3real3MulS(localSpaceArray->m[0], scale.x);
+			a3real3MulS(localSpaceArray->m[1], scale.x);
+			a3real3MulS(localSpaceArray->m[2], scale.x);
+
 
 		}
 
@@ -100,10 +115,19 @@ inline int a3animate_updateSkeletonObjectSpace(a3_Hierarchy const* hierarchy,
 {
 	if (hierarchy && objectSpaceArray && localSpaceArray)
 	{
-		// ****TO-DO: 
+		// ****DONE: 
 		// forward kinematics
-		//a3ui32 j;
-		//a3i32 jp;
+		a3ui32 j;
+		a3i32 jp;
+
+
+
+		for (j = 0; j < hierarchy->numNodes; ++j) {
+			jp = hierarchy->nodes[j].parentIndex;
+			if (jp == -1) objectSpaceArray[j] = localSpaceArray[j];
+			else a3real4x4ProductTransform(objectSpaceArray[j].m, objectSpaceArray[jp].m, localSpaceArray[j].m);
+		}
+
 
 		// done
 		return 1;
