@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_idle-input.c/.cpp
 	Demo state function implementations.
 
@@ -180,13 +180,13 @@ void a3demo_input_keyCharPress(a3_DemoState* demoState, a3i32 const asciiKey)
 // ascii key hold callback
 void a3demo_input_keyCharHold(a3_DemoState* demoState, a3i32 asciiKey)
 {
-//	switch (asciiKey)
-//	{
-//
-//	}
+	//	switch (asciiKey)
+	//	{
+	//
+	//	}
 
 
-	// callbacks for current mode
+		// callbacks for current mode
 	demoState->demoModeCallbacksPtr = demoState->demoModeCallbacks + demoState->demoMode;
 	if (demoState->demoModeCallbacksPtr)
 	{

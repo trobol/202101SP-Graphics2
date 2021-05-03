@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState.h
 	Demo state interface and programmer function declarations.
 
@@ -104,7 +104,7 @@ enum a3_DemoState_ObjectMaxCount
 	demoStateMaxCount_framebuffer = 16,
 };
 
-	
+
 //-----------------------------------------------------------------------------
 
 // callback types
@@ -270,6 +270,8 @@ struct a3_DemoState
 				prog_postBlend[1],							// post-processing blend pass (e.g. screen)
 				prog_drawPhong_shadow_instanced[1],			// draw Phong shading model with shadow map, instanced
 				prog_drawPhong_shadow[1];					// draw Phong shading model with shadow map
+
+			a3_DemoStateShaderProgram prog_drawText[1];
 		};
 	};
 
@@ -306,7 +308,8 @@ struct a3_DemoState
 				tex_ramp_dm[1],
 				tex_ramp_sm[1],
 				tex_testsprite[1],
-				tex_checker[1];
+				tex_checker[1],
+				tex_text[1];
 		};
 	};
 

@@ -153,6 +153,9 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_DemoMode1_PostProc\a3_DemoMode1_PostProc-unload.c">
       <Filter>Source Files\common\A3_DEMO\a3_DemoMode1_PostProc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_DemoState\a3_DemoState_UI.c">
+      <Filter>Source Files\common\A3_DEMO\a3_DemoState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_DemoState.h">
@@ -180,6 +183,9 @@
       <Filter>Header Files\A3_DEMO</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_DemoMode1_PostProc.h">
+      <Filter>Header Files\A3_DEMO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_DemoState_UI.h">
       <Filter>Header Files\A3_DEMO</Filter>
     </ClInclude>
   </ItemGroup>
@@ -261,6 +267,15 @@
     </None>
     <None Include="..\..\..\resource\glsl\4x\fs\01-pipeline\postBright_fs4x.glsl">
       <Filter>Resource Files\A3_DEMO\glsl\4x\fs\01-pipeline</Filter>
+    </None>
+    <None Include="..\..\..\resource\glsl\4x\fs\drawText_fs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs</Filter>
+    </None>
+    <None Include="..\..\..\resource\glsl\4x\fs\final\drawToScreen_fs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs</Filter>
+    </None>
+    <None Include="..\..\..\resource\glsl\4x\vs\final\draw_rect_vs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\vs</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -425,7 +425,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	//	-> uncomment first post-processing pass
 	//	-> implement bloom pipeline following the above algorithm
 	//		(hint: this is the entirety of the first bright pass)
-	
+
 	//Alex Jaeger
 
 	//Bright Pass, Half Size
@@ -532,6 +532,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 	a3vertexDrawableRenderActive();
 
 
+
 	//-------------------------------------------------------------------------
 	// DISPLAY: final pass, perform and present final composite
 	//	- finally draw to back buffer
@@ -541,7 +542,11 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 
 	// revert to back buffer and disable depth testing
 	a3framebufferDeactivateSetViewport(a3fbo_depthDisable,
-		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth, demoState->frameHeight);
+		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth / 3, demoState->frameHeight);
+
+
+
+
 
 	// ****DONE:
 	//	-> uncomment display FBO selection
@@ -574,6 +579,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 		break;
 	}
 
+
 	// final display: activate desired final program and draw FSQ
 	if (currentDisplayFBO)
 	{
@@ -582,9 +588,18 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 		currentDemoProgram = demoState->prog_drawTexture;
 		a3shaderProgramActivate(currentDemoProgram->program);
 
+		const a3mat4 quad = {
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		};
+
+
+
 		// done
 		a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
-		a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
+		a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, quad.mm);
 		a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
 		a3vertexDrawableRenderActive();
 	}

@@ -24,10 +24,19 @@
 
 #version 450
 
+in vec4 vTexcoord_atlas;
+
+uniform sampler2D uTex_dm;
+uniform vec4 uColor;
+
 layout (location = 0) out vec4 rtFragColor;
 
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE YELLOW
-	rtFragColor = vec4(1.0, 1.0, 0.0, 1.0);
+	//rtFragColor = vec4(1.0, 1.0, 0.0, 1.0);
+	vec4 sample_dm = texture(uTex_dm, vTexcoord_atlas.xy);
+
+
+	rtFragColor = uColor * sample_dm;
 }

@@ -80,6 +80,7 @@
 //-----------------------------------------------------------------------------
 
 #include "../a3_DemoState.h"
+#include "../a3_DemoState_UI.h"
 
 #include <stdio.h>
 
@@ -344,6 +345,7 @@ void a3demo_loadGeometry(a3_DemoState* demoState)
 	currentDrawable = demoState->draw_teapot;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, loadedModelsData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 
+	a3demo_loadUIBuffers(demoState);
 
 	// release data when done
 	for (i = 0; i < displayShapesCount; ++i)
@@ -444,6 +446,8 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 				postBlur_fs[1],
 				postBlend_fs[1],
 				drawPhong_shadow_fs[1];
+
+			a3_DemoStateShader drawText_fs[1];
 		};
 	} shaderList = {
 		{
@@ -468,26 +472,24 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 
 			// gs
 			// 00-common
-			{ { { 0 },	"shdr-gs:draw-tb",					a3shader_geometry,	2,{ A3_DEMO_GS"00-common/e/drawTangentBasis_gs4x.glsl",
-																					A3_DEMO_GS"00-common/e/utilCommon_gs4x.glsl",} } },
+			{ { { 0 },	"shdr-gs:draw-tb",					a3shader_geometry,	2,{ A3_DEMO_GS"00-common/e/drawTangentBasis_gs4x.glsl", A3_DEMO_GS"00-common/e/utilCommon_gs4x.glsl",} } },
 
-																					// fs
-																					// base
-																					{ { { 0 },	"shdr-fs:draw-col-unif",			a3shader_fragment,	1,{ A3_DEMO_FS"e/drawColorUnif_fs4x.glsl" } } },
-																					{ { { 0 },	"shdr-fs:draw-col-attr",			a3shader_fragment,	1,{ A3_DEMO_FS"e/drawColorAttrib_fs4x.glsl" } } },
-																					// 00-common
-																					{ { { 0 },	"shdr-fs:draw-tex",					a3shader_fragment,	1,{ A3_DEMO_FS"00-common/e/drawTexture_fs4x.glsl" } } },
-																					{ { { 0 },	"shdr-fs:draw-Lambert",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawLambert_fs4x.glsl",
-																																							A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
-																					{ { { 0 },	"shdr-fs:draw-Phong",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawPhong_fs4x.glsl",
-																																							A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
-																																							// 01-pipeline
-																																							{ { { 0 },	"shdr-fs:post-bright",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBright_fs4x.glsl" } } }, // ****DECODE
-																																							{ { { 0 },	"shdr-fs:post-blur",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBlur_fs4x.glsl" } } }, // ****DECODE
-																																							{ { { 0 },	"shdr-fs:post-blend",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBlend_fs4x.glsl" } } }, // ****DECODE
-																																							{ { { 0 },	"shdr-fs:draw-Phong-shadow",		a3shader_fragment,	2,{ A3_DEMO_FS"01-pipeline/drawPhong_shadow_fs4x.glsl", // ****DECODE
-																																																									A3_DEMO_FS"00-common/utilCommon_fs4x.glsl",} } }, // ****DECODE
-																																						}
+			// fs
+			// base
+			{ { { 0 },	"shdr-fs:draw-col-unif",			a3shader_fragment,	1,{ A3_DEMO_FS"e/drawColorUnif_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-col-attr",			a3shader_fragment,	1,{ A3_DEMO_FS"e/drawColorAttrib_fs4x.glsl" } } },
+			// 00-common
+			{ { { 0 },	"shdr-fs:draw-tex",					a3shader_fragment,	1,{ A3_DEMO_FS"00-common/e/drawTexture_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-Lambert",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawLambert_fs4x.glsl",
+																					A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
+			{ { { 0 },	"shdr-fs:draw-Phong",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawPhong_fs4x.glsl", A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
+			// 01-pipeline
+			{ { { 0 },	"shdr-fs:post-bright",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBright_fs4x.glsl" } } }, // ****DECODE
+			{ { { 0 },	"shdr-fs:post-blur",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBlur_fs4x.glsl" } } }, // ****DECODE
+			{ { { 0 },	"shdr-fs:post-blend",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBlend_fs4x.glsl" } } }, // ****DECODE
+			{ { { 0 },	"shdr-fs:draw-Phong-shadow",		a3shader_fragment,	2,{ A3_DEMO_FS"01-pipeline/drawPhong_shadow_fs4x.glsl", A3_DEMO_FS"00-common/utilCommon_fs4x.glsl",} } },
+			{ { { 0 },	"shdr-fs:draw-text",				a3shader_fragment,	1,{ A3_DEMO_FS"drawText_fs4x.glsl" } } },
+		}
 	};
 	a3_DemoStateShader* const shaderListPtr = (a3_DemoStateShader*)(&shaderList), * shaderPtr;
 	const a3ui32 numUniqueShaders = sizeof(shaderList) / sizeof(a3_DemoStateShader);
@@ -618,6 +620,12 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.postBlend_fs->shader);
 
 
+	// draw text
+	currentDemoProg = demoState->prog_drawText;
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-text");
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawText_fs->shader);
+
 	// activate a primitive for validation
 	// makes sure the specified geometry can draw using programs
 	// good idea to activate the drawable with the most attributes
@@ -722,7 +730,6 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 	a3bufferCreate(demoState->ubo_light, "ubo:light", a3buffer_uniform, a3index_countMaxShort, 0);
 	a3bufferCreate(demoState->ubo_transform, "ubo:transform", a3buffer_uniform, a3index_countMaxShort, 0);
 
-
 	printf("\n\n---------------- LOAD SHADERS FINISHED ---------------- \n");
 
 	//done
@@ -768,6 +775,9 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 				texRampSM[1],
 				texTestSprite[1],
 				texChecker[1];
+
+			a3_DemoStateTexture
+				texText[1];
 		};
 	} textureList = {
 		{
@@ -790,6 +800,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 			{ demoState->tex_ramp_sm,		"tex:ramp-sm",		A3_DEMO_TEX"sprite/celRamp_sm.png" },
 			{ demoState->tex_testsprite,	"tex:testsprite",	A3_DEMO_TEX"sprite/spriteTest8x8.png" },
 			{ demoState->tex_checker,		"tex:checker",		A3_DEMO_TEX"sprite/checker.png" },
+			{ demoState->tex_text,			"tex:text",			A3_DEMO_TEX"text.bmp" },
 		}
 	};
 	const a3ui32 numTextures = sizeof(textureList) / sizeof(a3_DemoStateTexture);
@@ -799,7 +810,8 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 	for (i = 0; i < numTextures; ++i)
 	{
 		texturePtr = textureListPtr + i;
-		a3textureCreateFromFile(texturePtr->texture, texturePtr->textureName, texturePtr->filePath);
+		int load = a3textureCreateFromFile(texturePtr->texture, texturePtr->textureName, texturePtr->filePath);
+		if (load != 1) printf("failed to load textue %s at %s\n", texturePtr->textureName, texturePtr->filePath);
 		a3textureActivate(texturePtr->texture, a3tex_unit00);
 		a3textureDefaultSettings();
 	}
@@ -828,6 +840,9 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 		a3textureChangeRepeatMode(a3tex_repeatClamp, a3tex_repeatClamp); // clamp both axes
 	}
 
+	a3textureActivate(demoState->tex_text, a3tex_unit00);
+	a3textureChangeFilterMode(a3tex_filterLinear); // linear pixel blending
+	a3textureChangeRepeatMode(a3tex_repeatNormal, a3tex_repeatClamp); // repeat horizontal, clamp vertical
 
 	// done
 	a3textureDeactivate(a3tex_unit00);

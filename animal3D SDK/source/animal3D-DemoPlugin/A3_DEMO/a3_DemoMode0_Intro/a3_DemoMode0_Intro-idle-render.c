@@ -36,6 +36,7 @@
 #include "../_a3_demo_utilities/a3_DemoRenderUtils.h"
 
 
+
 // OpenGL
 #ifdef _WIN32
 #include <gl/glew.h>
@@ -183,7 +184,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// reset viewport
 	a3framebufferDeactivateSetViewport(a3fbo_depth24_stencil8,
-		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth, demoState->frameHeight);
+		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth / 3, demoState->frameHeight);
 
 	// clear buffers
 	if (demoState->displaySkybox)
@@ -265,7 +266,28 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	if (demoState->stencilTest)
 		glDisable(GL_STENCIL_TEST);
 
+	const a3mat4 fsq = {
+		2.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 2.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 2.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
 
+
+
+	glAlphaFunc(GL_GREATER, 0.5f);
+	glEnable(GL_ALPHA_TEST);
+
+	a3vertexDrawableActivate(demoState->draw_unit_plane_z);
+	currentDemoProgram = demoState->prog_drawText;
+	a3shaderProgramActivate(currentDemoProgram->program);
+	a3textureActivate(demoState->tex_text, a3tex_unit00);
+	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
+	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
+	a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
+	a3vertexDrawableRenderActive();
+
+	glDisable(GL_ALPHA_TEST);
 	//-------------------------------------------------------------------------
 	// OVERLAYS: done after FSQ so they appear over everything else
 	//	- disable depth testing
@@ -322,6 +344,8 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	// overlays with no depth
 	glDisable(GL_DEPTH_TEST);
 
+
+
 	// hidden volumes
 	if (demoState->displayHiddenVolumes)
 	{
@@ -353,6 +377,13 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 			a3demo_drawModelSimple(modelViewProjectionMat.m, viewProjectionMat.m, modelMat.m, currentDemoProgram);
 		}
 	}
+
+
+
+	// render all the rects to the screen
+
+
+
 }
 
 
