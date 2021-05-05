@@ -345,7 +345,6 @@ void a3demo_loadGeometry(a3_DemoState* demoState)
 	currentDrawable = demoState->draw_teapot;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, loadedModelsData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 
-	a3demo_loadUIBuffers(demoState);
 
 	// release data when done
 	for (i = 0; i < displayShapesCount; ++i)
@@ -358,6 +357,70 @@ void a3demo_loadGeometry(a3_DemoState* demoState)
 
 	// dummy
 	a3demo_initDummyDrawable_internal(demoState);
+}
+
+
+
+void a3demo_loadUI(a3_DemoState* demoState) {
+
+	a3ui32 tex_width = demoState->tex_font->width;
+	a3ui32 tex_height = demoState->tex_font->height;
+
+	FILE* fp = fopen(A3_DEMO_RES_DIR"font_data.txt", "r");
+	if (!fp) {
+		printf("failed to open font data\n");
+		return;
+	}
+
+	a3ui32 i, char_index;
+
+	for (i = 0, char_index = A3_UI_CHAR_START; i < A3_UI_CHAR_COUNT; i++, char_index++) {
+		a3ui32 n;
+		a3ui32 x, y;
+		a3ui32 width, height;
+		a3ui32 left, top;
+		a3ui32 advance;
+
+		int ret = fscanf(fp, "%i %i %i %i %i %i %i %i\n",
+			&n, &x, &y, &width, &height, &left, &top, &advance);
+		if (ret != 8) {
+			printf("failed to parse font data: read %i ints\n", i);
+			return;
+		}
+		if (n != char_index) {
+			printf("failed to parse font data: tried to read %i but got %i\n", char_index, n);
+			return;
+		}
+
+		// convert coordinates to opengl tex coords
+		a3real norm_x = (float)x / (float)tex_width;
+		a3real norm_y = (float)y / (float)tex_height;
+		a3vec2 coords = (a3vec2){
+			.x = norm_x,
+			.y = 1.0f - norm_y
+		};
+		a3real norm_scale_y = (float)height / (float)tex_height;
+		a3vec2 scale = (a3vec2){
+			.x = (float)width / (float)tex_width,
+			.y = -norm_scale_y
+		};
+
+		demoState->ui_characters[i] = (a3_UI_Char){
+			.tex_coords = coords,
+			.tex_scale = scale,
+			.width = width,
+			.height = height,
+			.left = left,
+			.top = top,
+			.advance = advance
+		};
+
+	}
+
+	fclose(fp);
+
+
+	a3demo_loadUIVertexArray(demoState);
 }
 
 
@@ -425,6 +488,8 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 				passTangentBasis_shadowCoord_transform_vs[1],
 				passTangentBasis_shadowCoord_transform_instanced_vs[1];
 
+
+
 			// geometry shaders
 			// 00-common
 			a3_DemoStateShader
@@ -447,7 +512,11 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 				postBlend_fs[1],
 				drawPhong_shadow_fs[1];
 
-			a3_DemoStateShader drawText_fs[1];
+			a3_DemoStateShader
+				drawText_fs[1],
+				screen_rect_fs[1];
+			a3_DemoStateShader
+				pass_rect_vs[1];
 		};
 	} shaderList = {
 		{
@@ -462,13 +531,15 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"e/passthru_transform_instanced_vs4x.glsl" } } },
 			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"e/passColor_transform_instanced_vs4x.glsl" } } },
 			// 00-common
-			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/e/passTexcoord_transform_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/passTexcoord_transform_vs4x.glsl" } } },
 			{ { { 0 },	"shdr-vs:pass-tb-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/e/passTangentBasis_transform_vs4x.glsl" } } },
 			{ { { 0 },	"shdr-vs:pass-tex-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/e/passTexcoord_transform_instanced_vs4x.glsl" } } },
 			{ { { 0 },	"shdr-vs:pass-tb-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"00-common/e/passTangentBasis_transform_instanced_vs4x.glsl" } } },
 			// 01-pipeline
-			{ { { 0 },	"shdr-vs:pass-tb-sc-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"01-pipeline/passTangentBasis_shadowCoord_transform_vs4x.glsl" } } }, // ****DECODE
+			{ { { 0 },	"shdr-vs:pass-tb-sc-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"01-pipeline/e/passTangentBasis_shadowCoord_transform_vs4x.glsl" } } }, // ****DECODE
 			{ { { 0 },	"shdr-vs:pass-tb-sc-trans-inst",	a3shader_vertex  ,	1,{ A3_DEMO_VS"01-pipeline/e/passTangentBasis_shadowCoord_transform_instanced_vs4x.glsl" } } },
+
+
 
 			// gs
 			// 00-common
@@ -484,11 +555,15 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 																					A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
 			{ { { 0 },	"shdr-fs:draw-Phong",				a3shader_fragment,	2,{ A3_DEMO_FS"00-common/e/drawPhong_fs4x.glsl", A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
 			// 01-pipeline
-			{ { { 0 },	"shdr-fs:post-bright",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBright_fs4x.glsl" } } }, // ****DECODE
-			{ { { 0 },	"shdr-fs:post-blur",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBlur_fs4x.glsl" } } }, // ****DECODE
-			{ { { 0 },	"shdr-fs:post-blend",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/postBlend_fs4x.glsl" } } }, // ****DECODE
-			{ { { 0 },	"shdr-fs:draw-Phong-shadow",		a3shader_fragment,	2,{ A3_DEMO_FS"01-pipeline/drawPhong_shadow_fs4x.glsl", A3_DEMO_FS"00-common/utilCommon_fs4x.glsl",} } },
+			{ { { 0 },	"shdr-fs:post-bright",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/e/postBright_fs4x.glsl" } } }, // ****DECODE
+			{ { { 0 },	"shdr-fs:post-blur",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/e/postBlur_fs4x.glsl" } } }, // ****DECODE
+			{ { { 0 },	"shdr-fs:post-blend",				a3shader_fragment,	1,{ A3_DEMO_FS"01-pipeline/e/postBlend_fs4x.glsl" } } }, // ****DECODE
+			{ { { 0 },	"shdr-fs:draw-Phong-shadow",		a3shader_fragment,	2,{ A3_DEMO_FS"01-pipeline/e/drawPhong_shadow_fs4x.glsl", A3_DEMO_FS"00-common/e/utilCommon_fs4x.glsl",} } },
+
 			{ { { 0 },	"shdr-fs:draw-text",				a3shader_fragment,	1,{ A3_DEMO_FS"drawText_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:screen-rect",				a3shader_fragment,	1,{ A3_DEMO_FS"final/screen_rect_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-rect",				a3shader_vertex,	1,{ A3_DEMO_VS"final/pass_rect_vs4x.glsl" } } },
+
 		}
 	};
 	a3_DemoStateShader* const shaderListPtr = (a3_DemoStateShader*)(&shaderList), * shaderPtr;
@@ -620,10 +695,17 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.postBlend_fs->shader);
 
 
+	// FINAL
+
+	currentDemoProg = demoState->prog_drawRect;
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-rect");
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.pass_rect_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.screen_rect_fs->shader);
+
 	// draw text
 	currentDemoProg = demoState->prog_drawText;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-text");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.pass_rect_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawText_fs->shader);
 
 	// activate a primitive for validation
@@ -712,6 +794,8 @@ void a3demo_loadShaders(a3_DemoState* demoState)
 		// lighting and shading uniform blocks
 		a3demo_setUniformDefaultBlock(currentDemoProg, ubMaterial, demoProg_blockMaterial);
 		a3demo_setUniformDefaultBlock(currentDemoProg, ubLight, demoProg_blockLight);
+
+		// UI uniform blocks
 	}
 
 
@@ -800,7 +884,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 			{ demoState->tex_ramp_sm,		"tex:ramp-sm",		A3_DEMO_TEX"sprite/celRamp_sm.png" },
 			{ demoState->tex_testsprite,	"tex:testsprite",	A3_DEMO_TEX"sprite/spriteTest8x8.png" },
 			{ demoState->tex_checker,		"tex:checker",		A3_DEMO_TEX"sprite/checker.png" },
-			{ demoState->tex_text,			"tex:text",			A3_DEMO_TEX"text.bmp" },
+			{ demoState->tex_font,			"tex:font",			A3_DEMO_TEX"font.bmp" },
 		}
 	};
 	const a3ui32 numTextures = sizeof(textureList) / sizeof(a3_DemoStateTexture);
@@ -840,7 +924,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 		a3textureChangeRepeatMode(a3tex_repeatClamp, a3tex_repeatClamp); // clamp both axes
 	}
 
-	a3textureActivate(demoState->tex_text, a3tex_unit00);
+	a3textureActivate(demoState->tex_font, a3tex_unit00);
 	a3textureChangeFilterMode(a3tex_filterLinear); // linear pixel blending
 	a3textureChangeRepeatMode(a3tex_repeatNormal, a3tex_repeatClamp); // repeat horizontal, clamp vertical
 

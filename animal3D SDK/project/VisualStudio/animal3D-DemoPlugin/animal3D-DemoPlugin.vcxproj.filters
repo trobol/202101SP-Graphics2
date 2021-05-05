@@ -91,6 +91,9 @@
     <Filter Include="Resource Files\A3_DEMO\glsl\4x\vs\01-pipeline">
       <UniqueIdentifier>{619e5605-751b-423c-8dcc-11dd46336862}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\A3_DEMO\glsl\4x\fs\final">
+      <UniqueIdentifier>{765dc224-674d-4ea9-8ff6-24d054644718}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_src_win\main_dll.c">
@@ -268,14 +271,17 @@
     <None Include="..\..\..\resource\glsl\4x\fs\01-pipeline\postBright_fs4x.glsl">
       <Filter>Resource Files\A3_DEMO\glsl\4x\fs\01-pipeline</Filter>
     </None>
+    <None Include="..\..\..\resource\glsl\4x\vs\final\pass_rect_vs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\vs</Filter>
+    </None>
+    <None Include="..\..\..\resource\glsl\4x\fs\final\screen_rect_fs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs\final</Filter>
+    </None>
     <None Include="..\..\..\resource\glsl\4x\fs\drawText_fs4x.glsl">
-      <Filter>Resource Files\A3_DEMO\glsl\4x\fs</Filter>
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs\final</Filter>
     </None>
     <None Include="..\..\..\resource\glsl\4x\fs\final\drawToScreen_fs4x.glsl">
-      <Filter>Resource Files\A3_DEMO\glsl\4x\fs</Filter>
-    </None>
-    <None Include="..\..\..\resource\glsl\4x\vs\final\draw_rect_vs4x.glsl">
-      <Filter>Resource Files\A3_DEMO\glsl\4x\vs</Filter>
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs\final</Filter>
     </None>
   </ItemGroup>
 </Project>

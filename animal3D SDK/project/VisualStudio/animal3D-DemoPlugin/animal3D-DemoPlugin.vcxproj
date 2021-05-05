@@ -241,6 +241,7 @@
     <None Include="..\..\..\resource\glsl\4x\fs\drawColorUnif_fs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\fs\drawText_fs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\fs\final\drawToScreen_fs4x.glsl" />
+    <None Include="..\..\..\resource\glsl\4x\fs\final\screen_rect_fs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\gs\00-common\drawTangentBasis_gs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\gs\00-common\utilCommon_gs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\00-common\passTangentBasis_transform_instanced_vs4x.glsl" />
@@ -250,7 +251,7 @@
     <None Include="..\..\..\resource\glsl\4x\vs\00-common\utilCommon_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\01-pipeline\passTangentBasis_shadowCoord_transform_instanced_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\01-pipeline\passTangentBasis_shadowCoord_transform_vs4x.glsl" />
-    <None Include="..\..\..\resource\glsl\4x\vs\final\draw_rect_vs4x.glsl" />
+    <None Include="..\..\..\resource\glsl\4x\vs\final\pass_rect_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passColor_transform_instanced_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passColor_transform_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passthru_transform_instanced_vs4x.glsl" />

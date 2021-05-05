@@ -174,6 +174,8 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	a3mat4 modelMat, modelViewMat, modelViewProjectionMat, atlasMat;
 
 
+
+
 	//-------------------------------------------------------------------------
 	// 1) SCENE PASS: render scene with desired shader
 	//	- activate scene framebuffer
@@ -184,7 +186,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	// reset viewport
 	a3framebufferDeactivateSetViewport(a3fbo_depth24_stencil8,
-		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth / 3, demoState->frameHeight);
+		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth, demoState->frameHeight);
 
 	// clear buffers
 	if (demoState->displaySkybox)
@@ -275,10 +277,22 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 
 
+
 	glAlphaFunc(GL_GREATER, 0.5f);
 	glEnable(GL_ALPHA_TEST);
 
+
 	a3vertexDrawableActivate(demoState->draw_unit_plane_z);
+	/*
+	currentDemoProgram = demoState->prog_drawRect;
+	a3shaderProgramActivate(currentDemoProgram->program);
+	a3textureActivate(demoState->tex_text, a3tex_unit00);
+	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
+	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
+	a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
+	a3vertexDrawableRenderActive();
+	*/
+	/*
 	currentDemoProgram = demoState->prog_drawText;
 	a3shaderProgramActivate(currentDemoProgram->program);
 	a3textureActivate(demoState->tex_text, a3tex_unit00);
@@ -286,8 +300,29 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
 	a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
 	a3vertexDrawableRenderActive();
+	*/
+
+	currentDemoProgram = demoState->prog_drawRect;
+	a3shaderProgramActivate(currentDemoProgram->program);
+
+	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
+	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
+	a3textureActivate(demoState->tex_font, a3tex_unit00);
+
+	glDrawBuffer(GL_BACK);
+	a3demo_drawText(demoState, 0, 0, "hello there");
+	//a3vertexDrawableRenderActive();
+
+	//a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
+	//a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
+	//a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
+	//glDrawBuffer(GL_BACK);
+	//a3demo_render_UI(&demoState->ui_controller);
+
 
 	glDisable(GL_ALPHA_TEST);
+
+
 	//-------------------------------------------------------------------------
 	// OVERLAYS: done after FSQ so they appear over everything else
 	//	- disable depth testing

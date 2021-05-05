@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	_a3_demo_callbacks.c/.cpp
 	Main implementation of window callback hooks.
 
@@ -102,6 +102,7 @@ void a3demo_loadShaders(a3_DemoState* demoState);
 void a3demo_loadTextures(a3_DemoState* demoState);
 void a3demo_loadFramebuffers(a3_DemoState* demoState);
 void a3demo_loadValidate(a3_DemoState* demoState);
+void a3demo_loadUI(a3_DemoState* demoState);
 
 // unloading
 void a3demo_unloadGeometry(a3_DemoState* demoState);
@@ -109,6 +110,7 @@ void a3demo_unloadShaders(a3_DemoState* demoState);
 void a3demo_unloadTextures(a3_DemoState* demoState);
 void a3demo_unloadFramebuffers(a3_DemoState* demoState);
 void a3demo_unloadValidate(a3_DemoState const* demoState);
+void a3demo_unloadUI(a3_DemoState* demoState);
 
 
 //-----------------------------------------------------------------------------
@@ -124,6 +126,7 @@ void a3postproc_unload(a3_DemoState const* demoState, a3_DemoMode1_PostProc* dem
 
 void a3intro_unloadValidate(a3_DemoState const* demoState, a3_DemoMode0_Intro* demoMode);
 void a3postproc_unloadValidate(a3_DemoState const* demoState, a3_DemoMode1_PostProc* demoMode);
+
 
 
 //-----------------------------------------------------------------------------
@@ -175,6 +178,8 @@ void a3demo_load(a3_DemoState* demoState)
 	// textures
 	a3demo_loadTextures(demoState);
 
+	// ui
+	a3demo_loadUI(demoState);
 
 	// set flags
 	demoState->displayGrid = a3true;
@@ -187,6 +192,8 @@ void a3demo_load(a3_DemoState* demoState)
 	demoState->updateAnimation = a3true;
 	demoState->stencilTest = a3false;
 	demoState->skipIntermediatePasses = a3false;
+
+
 }
 
 void a3demo_unload(a3_DemoState* demoState)
@@ -279,16 +286,16 @@ void a3demo_idle(a3_DemoState* demoState, a3f64 const dt)
 // callback implementations
 
 // demo is loaded
-A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hotbuild)
+A3DYLIBSYMBOL a3_DemoState* a3demoCB_load(a3_DemoState* demoState, a3boolean hotbuild)
 {
 	a3ui32 const stateSize = a3demo_getPersistentStateSize();
 	a3ui32 const trigSamplesPerDegree = 4;
-	
+
 	// do any re-allocation tasks
 	if (demoState && hotbuild)
 	{
 		// example 1: copy memory directly
-		a3_DemoState *demoState_copy = (a3_DemoState*)malloc(stateSize);
+		a3_DemoState* demoState_copy = (a3_DemoState*)malloc(stateSize);
 		if (demoState_copy)
 		{
 			// copy and release
@@ -296,7 +303,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 			free(demoState);
 			demoState = demoState_copy;
 		}
-		
+
 		// reset pointers
 		a3trigInitSetTables(trigSamplesPerDegree, demoState->trigTable);
 
@@ -347,7 +354,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 }
 
 // demo is unloaded; option to unload to prep for hotbuild
-A3DYLIBSYMBOL a3_DemoState *a3demoCB_unload(a3_DemoState *demoState, a3boolean hotbuild)
+A3DYLIBSYMBOL a3_DemoState* a3demoCB_unload(a3_DemoState* demoState, a3boolean hotbuild)
 {
 	// release things that need releasing always, whether hotbuilding or not
 	// e.g. kill thread
@@ -387,7 +394,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_unload(a3_DemoState *demoState, a3boolean h
 
 // window updates display
 // **NOTE: DO NOT USE FOR RENDERING**
-A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState *demoState)
+A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState* demoState)
 {
 	// do nothing, should just return 1 to indicate that the 
 	//	window's display area is controlled by the demo
@@ -395,7 +402,7 @@ A3DYLIBSYMBOL a3i32 a3demoCB_display(a3_DemoState *demoState)
 }
 
 // window idles
-A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
+A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState* demoState)
 {
 	// perform any idle tasks, such as rendering
 	if (!demoState->exitFlag)
@@ -419,14 +426,14 @@ A3DYLIBSYMBOL a3i32 a3demoCB_idle(a3_DemoState *demoState)
 }
 
 // window gains focus
-A3DYLIBSYMBOL void a3demoCB_windowActivate(a3_DemoState *demoState)
+A3DYLIBSYMBOL void a3demoCB_windowActivate(a3_DemoState* demoState)
 {
 	// nothing really needs to be done here...
 	//	but it's here just in case
 }
 
 // window loses focus
-A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState *demoState)
+A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState* demoState)
 {
 	// reset input; it won't track events if the window is inactive, 
 	//	active controls will freeze and you'll get strange behaviors
@@ -437,13 +444,13 @@ A3DYLIBSYMBOL void a3demoCB_windowDeactivate(a3_DemoState *demoState)
 }
 
 // window moves
-A3DYLIBSYMBOL void a3demoCB_windowMove(a3_DemoState *demoState, a3i32 newWindowPosX, a3i32 newWindowPosY)
+A3DYLIBSYMBOL void a3demoCB_windowMove(a3_DemoState* demoState, a3i32 newWindowPosX, a3i32 newWindowPosY)
 {
 	// nothing needed here
 }
 
 // window resizes
-A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState *demoState, a3i32 newWindowWidth, a3i32 newWindowHeight)
+A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState* demoState, a3i32 newWindowWidth, a3i32 newWindowHeight)
 {
 	// account for borders here
 	const a3i32 frameBorder = 64;
@@ -478,21 +485,21 @@ A3DYLIBSYMBOL void a3demoCB_windowResize(a3_DemoState *demoState, a3i32 newWindo
 }
 
 // any key is pressed
-A3DYLIBSYMBOL void a3demoCB_keyPress(a3_DemoState *demoState, a3i32 virtualKey)
+A3DYLIBSYMBOL void a3demoCB_keyPress(a3_DemoState* demoState, a3i32 virtualKey)
 {
 	// persistent state update
 	a3keyboardSetState(demoState->keyboard, (a3_KeyboardKey)virtualKey, a3input_down);
 }
 
 // any key is held
-A3DYLIBSYMBOL void a3demoCB_keyHold(a3_DemoState *demoState, a3i32 virtualKey)
+A3DYLIBSYMBOL void a3demoCB_keyHold(a3_DemoState* demoState, a3i32 virtualKey)
 {
 	// persistent state update
 	a3keyboardSetState(demoState->keyboard, (a3_KeyboardKey)virtualKey, a3input_down);
 }
 
 // any key is released
-A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState *demoState, a3i32 virtualKey)
+A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState* demoState, a3i32 virtualKey)
 {
 	// persistent state update
 	a3keyboardSetState(demoState->keyboard, (a3_KeyboardKey)virtualKey, a3input_up);
@@ -500,7 +507,7 @@ A3DYLIBSYMBOL void a3demoCB_keyRelease(a3_DemoState *demoState, a3i32 virtualKey
 
 // ASCII key is pressed (immediately preceded by "any key" pressed call above)
 // NOTE: there is no release counterpart
-A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey)
+A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState* demoState, a3i32 asciiKey)
 {
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
@@ -546,7 +553,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharPress(a3_DemoState *demoState, a3i32 asciiKey
 }
 
 // ASCII key is held
-A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState *demoState, a3i32 asciiKey)
+A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState* demoState, a3i32 asciiKey)
 {
 	// persistent state update
 	a3keyboardSetStateASCII(demoState->keyboard, (a3byte)asciiKey);
@@ -563,7 +570,7 @@ A3DYLIBSYMBOL void a3demoCB_keyCharHold(a3_DemoState *demoState, a3i32 asciiKey)
 }
 
 // mouse button is clicked
-A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetState(demoState->mouse, (a3_MouseButton)button, a3input_down);
@@ -571,7 +578,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseClick(a3_DemoState *demoState, a3i32 button, a3
 }
 
 // mouse button is double-clicked
-A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetState(demoState->mouse, (a3_MouseButton)button, a3input_down);
@@ -579,7 +586,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseDoubleClick(a3_DemoState *demoState, a3i32 butt
 }
 
 // mouse button is released
-A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState *demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState* demoState, a3i32 button, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetState(demoState->mouse, (a3_MouseButton)button, a3input_up);
@@ -587,7 +594,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseRelease(a3_DemoState *demoState, a3i32 button, 
 }
 
 // mouse wheel is turned
-A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState* demoState, a3i32 delta, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetStateWheel(demoState->mouse, (a3_MouseWheelState)delta);
@@ -595,14 +602,14 @@ A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i
 }
 
 // mouse moves
-A3DYLIBSYMBOL void a3demoCB_mouseMove(a3_DemoState *demoState, a3i32 cursorX, a3i32 cursorY)
+A3DYLIBSYMBOL void a3demoCB_mouseMove(a3_DemoState* demoState, a3i32 cursorX, a3i32 cursorY)
 {
 	// persistent state update
 	a3mouseSetPosition(demoState->mouse, cursorX, cursorY);
 }
 
 // mouse leaves window
-A3DYLIBSYMBOL void a3demoCB_mouseLeave(a3_DemoState *demoState)
+A3DYLIBSYMBOL void a3demoCB_mouseLeave(a3_DemoState* demoState)
 {
 	// reset mouse state or any buttons pressed will freeze
 	a3mouseReset(demoState->mouse);

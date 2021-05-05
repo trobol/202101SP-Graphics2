@@ -1,5 +1,5 @@
 /*
-	Copyright 2011-2021 Daniel S. Buckstein
+	Copyright 2011-2020 Daniel S. Buckstein
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
@@ -24,15 +24,22 @@
 
 #version 450
 
-layout (location = 0) in vec4 aPosition;
+layout (location = 0)	in vec4 aPosition;
+layout (location = 8)	in vec4 aTexcoord;
+
+uniform mat4 uMVP;
+uniform mat4 uAtlas;
+
+out vec4 vTexcoord_atlas;
 
 flat out int vVertexID;
 flat out int vInstanceID;
 
 void main()
 {
-	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+
+	vTexcoord_atlas = uAtlas * aTexcoord;
+	gl_Position = uMVP * aPosition;
 
 	vVertexID = gl_VertexID;
 	vInstanceID = gl_InstanceID;

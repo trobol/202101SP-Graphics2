@@ -45,6 +45,7 @@
 
 #include "a3_DemoMode0_Intro.h"
 #include "a3_DemoMode1_PostProc.h"
+#include "a3_DemoState_UI.h"
 
 
 //-----------------------------------------------------------------------------
@@ -271,7 +272,9 @@ struct a3_DemoState
 				prog_drawPhong_shadow_instanced[1],			// draw Phong shading model with shadow map, instanced
 				prog_drawPhong_shadow[1];					// draw Phong shading model with shadow map
 
-			a3_DemoStateShaderProgram prog_drawText[1];
+			a3_DemoStateShaderProgram
+				prog_drawText[1],
+				prog_drawRect[1];
 		};
 	};
 
@@ -309,7 +312,7 @@ struct a3_DemoState
 				tex_ramp_sm[1],
 				tex_testsprite[1],
 				tex_checker[1],
-				tex_text[1];
+				tex_font[1];
 		};
 	};
 
@@ -334,6 +337,18 @@ struct a3_DemoState
 
 	// managed objects, no touchie
 	a3_VertexDrawable dummyDrawable[1];
+
+
+
+	// UI Data
+
+	a3_VertexBuffer vbo_ui_quad[1];
+	a3_VertexBuffer vbo_ui_instances[1];
+
+	a3_VertexArrayDescriptor vao_ui_quads[1];
+
+	a3_UI_Char ui_characters[A3_UI_CHAR_COUNT];
+
 
 
 	//-------------------------------------------------------------------------

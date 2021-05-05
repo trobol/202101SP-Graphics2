@@ -542,7 +542,7 @@ void a3postproc_render(a3_DemoState const* demoState, a3_DemoMode1_PostProc cons
 
 	// revert to back buffer and disable depth testing
 	a3framebufferDeactivateSetViewport(a3fbo_depthDisable,
-		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth / 3, demoState->frameHeight);
+		-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth, demoState->frameHeight);
 
 
 
