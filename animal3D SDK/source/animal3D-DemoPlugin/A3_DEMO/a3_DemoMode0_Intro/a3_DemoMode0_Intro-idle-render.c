@@ -281,7 +281,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 
 	glDrawBuffer(GL_BACK);
-	a3demo_drawText(demoState, 100, 200, demoMode->font_size, "hello world");
+	a3demo_drawText(demoState, 100, 500, demoMode->font_size, "hello world");
 
 
 
