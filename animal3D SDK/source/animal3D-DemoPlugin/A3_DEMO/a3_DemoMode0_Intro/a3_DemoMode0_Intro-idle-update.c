@@ -100,7 +100,12 @@ void a3intro_update(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode, a3f64
 	// prepare and upload graphics data
 	a3intro_update_graphics(demoState, demoMode);
 
-	a3_UI_update(demoState);
+
+	if (demoState->btn_next_rend_mode->pressed)
+		a3demoCtrlIncLoop(demoMode->renderMode, intro_renderMode_max);
+
+	if (demoState->btn_prev_rend_mode->pressed)
+		a3demoCtrlDecLoop(demoMode->renderMode, intro_renderMode_max);
 }
 
 

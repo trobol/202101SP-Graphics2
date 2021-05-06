@@ -103,6 +103,7 @@ void a3demo_loadTextures(a3_DemoState* demoState);
 void a3demo_loadFramebuffers(a3_DemoState* demoState);
 void a3demo_loadValidate(a3_DemoState* demoState);
 void a3demo_loadUI(a3_DemoState* demoState);
+void a3demo_loadUILayouts(a3_DemoState* demoState);
 
 // unloading
 void a3demo_unloadGeometry(a3_DemoState* demoState);
@@ -180,6 +181,7 @@ void a3demo_load(a3_DemoState* demoState)
 
 	// ui
 	a3demo_loadUI(demoState);
+	a3demo_loadUILayouts(demoState);
 
 	// set flags
 	demoState->displayGrid = a3true;

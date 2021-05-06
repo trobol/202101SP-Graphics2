@@ -1061,5 +1061,72 @@ void a3demo_loadValidate(a3_DemoState* demoState)
 	a3demo_initDummyDrawable_internal(demoState);
 }
 
+/*
+* UI LAYOUTS
+*/
+
+void a3demo_addLabel(a3_DemoState* demoState, a3ui32 x, a3ui32 y, const char* label) {
+	a3_UI_Static_Text_Description text_descr = (a3_UI_Static_Text_Description){
+		.x = 2820 + x,
+		.y = 60 + y,
+		.size = 0.4f,
+		.font_chars = demoState->ui_characters,
+		.text = label
+	};
+	a3_UI_layoutAddStaticText(demoState->ui_layout, text_descr);
+}
+
+void a3demo_addButton(a3_DemoState* demoState, a3ui32 x, a3ui32 y, const char* label, a3_UI_Button** btn_out) {
+
+
+	a3_UI_Button_Description btn_dscr = (a3_UI_Button_Description){
+			.x = 2820 + x,
+			.y = 40 + y,
+			.width = 100,
+			.height = 30,
+			.coords = demoState->ui_atlas_box,
+			.color_hover = (a3vec3){0.0f, 0.7f, 0.8f},
+			.color_click = (a3vec3){0.4f, 0.4f, 0.5f},
+			.color = (a3vec3){0.8f, 0.8f, 0.9f}
+	};
+
+	a3_UI_layoutAddButton(demoState->ui_layout, btn_out, btn_dscr);
+
+	a3demo_addLabel(demoState, x, y, label);
+}
+
+void a3demo_loadUILayouts(a3_DemoState* demoState) {
+
+	*demoState->ui_layout = (a3_UI_Layout){ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	a3_UI_Quad background = (a3_UI_Quad){
+		.pos = (a3vec2){2800, 20},
+		.scale = (a3vec2){500, 1000},
+		.color = (a3vec3){0.9f, 0.9f, 0.9f},
+		.coords = demoState->ui_atlas_box,
+	};
+	a3_UI_layoutAddQuad(demoState->ui_layout, 0, background);
+
+	a3demo_addLabel(demoState, 100, 0, "DEMO MODE");
+
+	a3demo_addButton(demoState, 50, 30, "prev", &demoState->btn_prev_demo_mode);
+	a3demo_addButton(demoState, 250, 30, "next", &demoState->btn_next_demo_mode);
+
+	a3demo_addLabel(demoState, 100, 70, "RENDER MODE");
+	a3demo_addButton(demoState, 50, 100, "prev", &demoState->btn_prev_rend_mode);
+	a3demo_addButton(demoState, 250, 100, "next", &demoState->btn_next_rend_mode);
+
+	a3_UI_Checkbox_Descriptor checkbox_dscr = (a3_UI_Checkbox_Descriptor){
+		.x = 2820,
+		.y = 200,
+		.size = 50,
+		.box_coords = demoState->ui_atlas_indent_box,
+	};
+
+	a3_UI_Checkbox* checkbox_out;
+	a3_UI_layoutAddCheckbox(demoState->ui_layout, &checkbox_out, checkbox_dscr);
+
+
+}
+
 
 //-----------------------------------------------------------------------------

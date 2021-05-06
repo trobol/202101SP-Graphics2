@@ -350,13 +350,6 @@ struct a3_DemoState
 
 	a3_UI_Char ui_characters[A3_UI_CHAR_COUNT];
 
-	a3_UI_Element_Manager ui_elem_manager;
-
-
-	a3_UI_Element_Type
-		ui_checkbox[1],
-		ui_textbox[1],
-		ui_hoverbox[1];
 
 	union {
 
@@ -374,13 +367,16 @@ struct a3_DemoState
 	};
 
 
-	union {
-		a3_UI_Layout ui_layouts[10];
-		struct {
-			a3_UI_Layout
-				ui_layout_top[1];
-		};
-	};
+
+	a3_UI_Layout ui_layout[1];
+
+
+	a3_UI_Button
+		* btn_next_demo_mode,
+		* btn_prev_demo_mode,
+		* btn_next_rend_mode,
+		* btn_prev_rend_mode;
+
 
 	//-------------------------------------------------------------------------
 	// the end

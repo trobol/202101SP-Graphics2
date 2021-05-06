@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_idle-update.c/.cpp
 	Demo state function implementations.
 
@@ -31,6 +31,7 @@
 //-----------------------------------------------------------------------------
 
 #include "../a3_DemoState.h"
+#include "../_a3_demo_utilities/a3_DemoMacros.h"
 
 
 //-----------------------------------------------------------------------------
@@ -100,8 +101,16 @@ void a3demo_update_pointLight(a3_PointLightComponent const* pointLightArray,
 //-----------------------------------------------------------------------------
 // UPDATE
 
-void a3demo_update(a3_DemoState *demoState, a3f64 const dt)
+void a3demo_update(a3_DemoState* demoState, a3f64 const dt)
 {
+	a3_UI_updateLayout(demoState, demoState->ui_layout);
+
+	if (demoState->btn_next_demo_mode->pressed)
+		a3demoCtrlIncLoop(demoState->demoMode, demoState_mode_max);
+
+	if (demoState->btn_prev_demo_mode->pressed)
+		a3demoCtrlDecLoop(demoState->demoMode, demoState_mode_max);
+
 	// callback for current mode
 	demoState->demoModeCallbacksPtr = demoState->demoModeCallbacks + demoState->demoMode;
 	if (demoState->demoModeCallbacksPtr)

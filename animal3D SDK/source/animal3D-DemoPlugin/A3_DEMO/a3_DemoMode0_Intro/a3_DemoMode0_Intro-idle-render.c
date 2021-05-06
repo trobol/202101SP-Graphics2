@@ -277,9 +277,6 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 
 
-
-	glAlphaFunc(GL_GREATER, 0.5f);
-	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
 
 	a3vertexDrawableActivate(demoState->draw_unit_plane_z);

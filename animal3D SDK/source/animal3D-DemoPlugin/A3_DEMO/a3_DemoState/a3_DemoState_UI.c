@@ -27,96 +27,6 @@ void a3_UI_loadSpriteCoords(a3_DemoState* demoState);
 void a3_UI_bufferDrawRects(a3_DemoState const* demoState, a3_UI_Quad* rects, a3ui32 count);
 void a3_UI_drawBufferedRects(a3_DemoState const* demoState, a3ui32 count, const a3_DemoStateShaderProgram* program, const a3_Texture* tex);
 
-a3_Screen_Rect a3demo_createScreenRect(a3ui32 width, a3ui32 height, a3ui32 x, a3ui32 y) {
-	a3_Framebuffer fbo;
-	a3framebufferCreate(&fbo, "fbo:c16x4:d24s8", 4, a3fbo_colorRGBA16, a3fbo_depthDisable, width, height);
-
-	return (a3_Screen_Rect) { .width = width, .height = height, .x = x, .y = y, .buffer = fbo };
-}
-
-void a3_UI_vtableCall(a3_DemoState* demoState, const a3_UI_Element_VTable_Index index) {
-	a3_UI_Element_Manager* manager = &demoState->ui_elem_manager;
-	a3_UI_Element* elem = elem = manager->elements;
-	a3_UI_Element* end = end = elem + manager->count;
-
-
-
-	for (; elem < end; elem++) {
-		if (elem->type->vtable.list[index])
-			elem->type->vtable.list[index](demoState, elem);
-	}
-}
-
-
-void a3_UI_createElementType(a3_UI_Element_Type* dst, const char* name, a3ui32 dataSize, a3_UI_Element_VTable vtable) {
-	*dst = (a3_UI_Element_Type){ .name = name, .data_size = dataSize, .vtable = vtable };
-}
-
-a3_UI_Element* a3_UI_addElement(a3_DemoState* demoState, const a3_UI_Element_Type* type, const a3_UI_Element* parent, void* data) {
-	a3_UI_Element_Manager* manager = &demoState->ui_elem_manager;
-	a3_UI_Element* elem = manager->elements + manager->count;
-	manager->count++;
-
-	*elem = (a3_UI_Element){ .type = type, .parent = parent };
-
-	memcpy(elem->data, data, type->data_size);
-
-	return elem;
-}
-
-
-void a3_UI_update(a3_DemoState* demoState) {
-	a3_UI_vtableCall(demoState, A3_UI_ELEMENT_VTABLE_UPDATE);
-}
-
-void a3_UI_render(a3_DemoState* demoState) {
-	//a3_UI_vtableCall(demoState, A3_UI_ELEMENT_VTABLE_RENDER);
-
-	const a3_UI_Element_Manager* manager = &demoState->ui_elem_manager;
-
-	a3_UI_Quad* rect_buffer = malloc(sizeof(a3_UI_Quad) * manager->count);
-	if (rect_buffer == 0) return;
-	a3_UI_Quad* rect = rect_buffer;
-
-	const a3_UI_Element* elem = manager->elements;
-	const a3_UI_Element* end = elem + manager->count;
-
-	for (; elem < end; elem++, rect++) {
-		*rect = (a3_UI_Quad){
-			.pos = (a3vec2){(a3real)elem->x, (a3real)elem->y},
-			.scale = (a3vec2){(a3real)elem->width, (a3real)elem->height},
-			.coords = elem->coords,
-			.color = elem->color
-		};
-	}
-
-	a3_UI_bufferDrawRects(demoState, rect_buffer, manager->count);
-	a3_UI_drawBufferedRects(demoState, manager->count, demoState->prog_drawRect, demoState->tex_ui_sprites);
-}
-
-void a3_UI_Element_Hoverbox_update(a3_DemoState* demoState, a3_UI_Element* elem) {
-	a3ret x = a3mouseGetX(demoState->mouse);
-	a3ret y = a3mouseGetX(demoState->mouse);
-
-	a3ui32 cmp_x = x - elem->x;
-	a3ui32 cmp_y = y - elem->y;
-
-	if (cmp_x < elem->width && cmp_y < elem->height)
-		elem->color = (a3vec3){ 1, 1, 1 };
-	else
-		elem->color = (a3vec3){ 0, 0, 0 };
-
-
-
-	printf("%d, %d   %d, %d %f\n", x, y, elem->width, elem->height, elem->color.x);
-}
-
-void a3_UI_Element_update(a3_DemoState* demoState, a3_UI_Element* elem) {
-	printf("%s update\n", elem->type->name);
-}
-void a3_UI_Element_render(a3_DemoState* demoState, a3_UI_Element* elem) {
-	printf("%s render\n", elem->type->name);
-}
 
 
 void a3_UI_load(a3_DemoState* demoState) {
@@ -125,25 +35,8 @@ void a3_UI_load(a3_DemoState* demoState) {
 
 	a3_UI_loadSpriteCoords(demoState);
 
-	a3_UI_loadElementTypes(demoState);
 
 	a3demo_loadUIVertexArray(demoState);
-
-
-	a3_UI_Element* elem = a3_UI_addElement(demoState, demoState->ui_hoverbox, 0, 0);
-	elem->x = 100;
-	elem->y = 100;
-	elem->width = 500;
-	elem->height = 500;
-
-	elem->coords = demoState->ui_atlas_box_round;
-}
-
-void a3_UI_loadElementTypes(a3_DemoState* demoState) {
-
-	a3_UI_createElementType(demoState->ui_checkbox, "checkbox", 0, (a3_UI_Element_VTable) { a3_UI_Element_update, a3_UI_Element_render });
-	a3_UI_createElementType(demoState->ui_textbox, "textbox", 0, (a3_UI_Element_VTable) { a3_UI_Element_update, a3_UI_Element_render });
-	a3_UI_createElementType(demoState->ui_hoverbox, "hoverbox", 0, (a3_UI_Element_VTable) { a3_UI_Element_Hoverbox_update, a3_UI_Element_render });
 
 }
 
@@ -278,6 +171,8 @@ void a3_UI_bufferDrawRects(a3_DemoState const* demoState, a3_UI_Quad* rects, a3u
 void a3_UI_drawBufferedRects(a3_DemoState const* demoState, a3ui32 count, const a3_DemoStateShaderProgram* program, const a3_Texture* tex) {
 
 	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	a3mat4 proj, invProj;
 	a3real right = (a3real)demoState->windowWidth;
@@ -370,16 +265,28 @@ void a3_UI_layoutAddButton(a3_UI_Layout* layout, a3_UI_Button** out, a3_UI_Butto
 		.coords = descr.coords
 	};
 
-	a3_UI_layoutAddQuad(layout, out, quad);
-	a3_UI_layoutAddStaticText(layout, descr.text_descr);
+	a3_UI_Button* btn = layout->buttons + layout->button_count;
+	layout->button_count++;
+
+	btn->x = descr.x;
+	btn->y = descr.y;
+	btn->width = descr.width;
+	btn->height = descr.height;
+	btn->color_hover = descr.color_hover;
+	btn->color_click = descr.color_click;
+	btn->color = descr.color;
+
+	a3_UI_layoutAddQuad(layout, &btn->quad, quad);
+
+	*out = btn;
 }
 
 void a3_UI_layoutAddStaticText(a3_UI_Layout* layout, a3_UI_Static_Text_Description descr) {
 	a3ui32 text_len = min(((a3ui32)strlen(descr.text)), 200);
 	a3real space_width = 40 * descr.size;
 
-	a3real x_pos = descr.x;
-	a3real y_pos = descr.y;
+	a3real x_pos = (a3real)descr.x;
+	a3real y_pos = (a3real)descr.y;
 
 
 	for (a3ui32 i = 0; i < text_len; i++) {
@@ -402,8 +309,8 @@ void a3_UI_layoutAddStaticText(a3_UI_Layout* layout, a3_UI_Static_Text_Descripti
 
 
 		a3vec2 pos = (a3vec2){
-			x_pos + (float)ui_char.left,
-			y_pos - (float)ui_char.top
+			x_pos + ((float)ui_char.left * descr.size),
+			y_pos - ((float)ui_char.top * descr.size)
 		};
 		a3vec2 scale = (a3vec2){
 			(float)ui_char.width,
@@ -411,7 +318,6 @@ void a3_UI_layoutAddStaticText(a3_UI_Layout* layout, a3_UI_Static_Text_Descripti
 		};
 
 		a3real2MulS(scale.v, descr.size);
-		a3real2MulS(pos.v, descr.size);
 
 		a3_UI_Quad quad = (a3_UI_Quad){
 			.coords = ui_char.coords,
@@ -421,7 +327,7 @@ void a3_UI_layoutAddStaticText(a3_UI_Layout* layout, a3_UI_Static_Text_Descripti
 
 		a3_UI_layoutAddCharQuad(layout, quad);
 
-		x_pos += (a3real)ui_char.advance;
+		x_pos += (a3real)ui_char.advance * descr.size;
 	}
 }
 
@@ -433,5 +339,99 @@ void a3_UI_layoutAddCharQuad(a3_UI_Layout* layout, a3_UI_Quad quad) {
 
 void a3_UI_layoutAddQuad(a3_UI_Layout* layout, a3_UI_Quad** out, a3_UI_Quad quad) {
 
-	layout->quads
+	a3_UI_Quad* q = layout->quads + layout->quad_count;
+	layout->quad_count++;
+	*q = quad;
+
+	if (out != 0)
+		*out = q;
+}
+
+void a3_UI_layoutAddCheckbox(a3_UI_Layout* layout, a3_UI_Checkbox** out, a3_UI_Checkbox_Descriptor descr) {
+	a3_UI_Button_Description btn_dscr = (a3_UI_Button_Description){
+			.x = descr.x,
+			.y = descr.y,
+			.width = descr.size,
+			.height = descr.size,
+			.coords = descr.box_coords,
+			.color_hover = (a3vec3){0.0f, 0.7f, 0.8f},
+			.color_click = (a3vec3){0.4f, 0.4f, 0.5f},
+			.color = (a3vec3){0.8f, 0.8f, 0.9f}
+	};
+
+	a3_UI_Checkbox* box = layout->checkboxes + layout->checkbox_count;
+	layout->checkbox_count++;
+
+	a3_UI_layoutAddButton(layout, &box->button, btn_dscr);
+
+
+	a3_UI_Quad quad = *box->button->quad;
+	quad.color = (a3vec3){ 0, 0, 0 };
+	a3_UI_layoutAddQuad(layout, &box->checkmark, quad);
+
+	*out = box;
+}
+
+void a3_UI_drawLayout(a3_DemoState* demoState, a3_UI_Layout* layout) {
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, demoState->vbo_ui_instances->handle->handle);
+
+		a3ui32 size = layout->quad_count * sizeof(a3_UI_Quad);
+		glBufferData(GL_ARRAY_BUFFER, size, layout->quads, GL_DYNAMIC_DRAW);
+
+		a3_UI_drawBufferedRects(demoState, layout->quad_count, demoState->prog_drawRect, demoState->tex_ui_sprites);
+	}
+
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, demoState->vbo_ui_instances->handle->handle);
+
+		a3ui32 size = layout->text_quad_count * sizeof(a3_UI_Quad);
+		glBufferData(GL_ARRAY_BUFFER, size, layout->text_quads, GL_DYNAMIC_DRAW);
+
+		a3_UI_drawBufferedRects(demoState, layout->text_quad_count, demoState->prog_drawText, demoState->tex_font);
+	}
+
+}
+
+
+void a3_UI_updateLayout(a3_DemoState* demoState, a3_UI_Layout* layout) {
+
+	a3ret x = a3mouseGetX(demoState->mouse);
+	a3ret y = a3mouseGetY(demoState->mouse);
+
+	a3ret pressed = a3mouseIsPressed(demoState->mouse, a3mouse_left);
+	a3ret held = a3mouseIsHeld(demoState->mouse, a3mouse_left);
+
+	for (a3ui32 i = 0; i < layout->button_count; i++) {
+		a3_UI_Button* btn = layout->buttons + i;
+		a3ui32 cmp_x = x - btn->x;
+		a3ui32 cmp_y = y - btn->y;
+
+		if (cmp_x < btn->width && cmp_y < btn->height) {
+
+			if (pressed || held)
+				btn->quad->color = btn->color_click;
+			else
+				btn->quad->color = btn->color_hover;
+
+			btn->pressed = pressed;
+			btn->held = held;
+		}
+		else {
+			btn->quad->color = btn->color;
+			btn->pressed = false;
+			btn->held = false;
+		}
+
+
+	}
+
+	for (a3ui32 i = 0; i < layout->checkbox_count; i++) {
+		a3_UI_Checkbox* box = layout->checkboxes + i;
+
+		if (box->button->pressed) box->checked = !box->checked;
+
+		if (box->checked) box->checkmark->coords = demoState->ui_atlas_check;
+		else box->checkmark->coords = demoState->ui_atlas_coords[10];
+	}
 }

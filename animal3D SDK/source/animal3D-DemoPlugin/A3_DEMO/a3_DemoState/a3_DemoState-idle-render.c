@@ -206,7 +206,8 @@ void a3demo_render(a3_DemoState* demoState, a3f64 const dt)
 
 	a3framebufferDeactivateSetViewport(a3fbo_depthDisable, 0, 0, demoState->windowWidth, demoState->windowHeight);
 
-	a3_UI_render(demoState);
+	//a3_UI_render(demoState);
+	a3_UI_drawLayout(demoState, demoState->ui_layout);
 
 	// deactivate things
 	a3vertexDrawableDeactivate();

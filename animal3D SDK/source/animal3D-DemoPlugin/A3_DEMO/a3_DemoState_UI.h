@@ -16,16 +16,6 @@
 
 typedef struct a3_DemoState a3_DemoState;
 
-typedef enum a3_UI_SpriteID {
-	A3_UI_SPRITE_CHECK,
-	A3_UI_SPRITE_SQUARE,
-	A3_UI_SPRITE_CIRCLE,
-	A3_UI_SPRITE_ROUND_SQR,
-	A3_UI_SPRITE_
-} a3_UI_SpriteID;
-
-
-
 
 
 // where a sprite is in an atlas
@@ -57,90 +47,17 @@ typedef struct a3_UI_Quad {
 } a3_UI_Quad;
 
 
-
-void a3_UI_update(a3_DemoState* demoState);
-void a3_UI_render(a3_DemoState* demoState);
-
 void a3_UI_load(a3_DemoState* demoState);
 
-a3_Screen_Rect a3demo_createScreenRect(a3ui32 width, a3ui32 height, a3ui32 x, a3ui32 y);
 
 void a3demo_drawText(const a3_DemoState* demoState, a3real x, a3real y, a3real font_scale, const char* text);
 
 
-/*
-	trying to do signed distance field fonts
-	https://steamcdn-a.akamaihd.net/apps/valve/2007/SIGGRAPH2007_AlphaTestedMagnification.pdf
-
-*/
 
 void a3demo_loadUIVertexArray(a3_DemoState* demoState);
 
 
-/*
-	elements are all the stuff drawn that is not text
-	elements are added one by one in the order they will apear,
-	the only way to remove elements is to clear all the elements
-*/
 
-#define A3_UI_MAX_ELEM_COUNT 512
-#define A3_UI_MAX_ELEM_TYPES  32
-#define A3_UI_MAX_ELEM_DATA_SIZE  32
-
-typedef struct a3_UI_Element a3_UI_Element;
-
-typedef void (*a3_UI_Element_VTable_Entry)(a3_DemoState* demoState, a3_UI_Element* elem);
-
-typedef enum a3_UI_Element_VTable_Index {
-	A3_UI_ELEMENT_VTABLE_UPDATE,
-	A3_UI_ELEMENT_VTABLE_RENDER,
-
-	A3_UI_ELEMENT_VTABLE_COUNT
-} a3_UI_Element_VTable_Index;
-
-typedef struct a3_UI_Element_VTable {
-	a3_UI_Element_VTable_Entry list[A3_UI_ELEMENT_VTABLE_COUNT];
-
-} a3_UI_Element_VTable;
-
-typedef struct a3_UI_Element_Type {
-	const char* name;
-	a3ui32 data_size;
-	a3_UI_Element_VTable vtable;
-} a3_UI_Element_Type;
-
-// create a new element type,
-void a3_UI_createElementType(a3_UI_Element_Type* dst, const char* name, a3ui32 dataSize, a3_UI_Element_VTable vtable);
-
-typedef struct a3_UI_Element {
-	a3ui32 x, y;
-	a3ui32 width, height;
-	a3vec3 color;
-	a3_UI_Atlas_Coords coords;
-	const a3_UI_Element* parent;
-	const a3_UI_Element_Type* type;
-
-
-	a3ubyte data[A3_UI_MAX_ELEM_DATA_SIZE];
-
-} a3_UI_Element;
-
-
-typedef struct a3_UI_Element_Manager {
-	a3ui32 count;
-	a3_UI_Element elements[A3_UI_MAX_ELEM_COUNT];
-
-} a3_UI_Element_Manager;
-
-
-a3_UI_Element* a3_UI_addElement(a3_DemoState* demoState, const a3_UI_Element_Type* type, const a3_UI_Element* parent, void* data);
-//void a3_UI_resizeElement(a3_UI_Element* elem, a3ui32 x, a3ui32 y, a3ui32 width, a3ui32 height);
-
-typedef struct a3_UI_Element_Textbox a3_UI_Element_Textbox;
-typedef struct a3_UI_Element_Checkbox a3_UI_Element_Checkbox;
-
-void a3_UI_Element_update(a3_DemoState* demoState, a3_UI_Element* elem);
-void a3_UI_Element_render(a3_DemoState* demoState, a3_UI_Element* elem);
 
 typedef struct a3_UI_Element_Textbox {
 	const char* text;
@@ -159,7 +76,6 @@ typedef struct a3_UI_Dynamic_Text {
 
 typedef struct a3_UI_Static_Text_Description {
 	a3ui32 x, y;
-	a3ui32 width, height;
 	a3real size;
 	const char* text;
 	const a3_UI_Char* font_chars;
@@ -170,15 +86,28 @@ typedef struct a3_UI_Static_Text_Description {
 typedef struct a3_UI_Button_Description {
 	a3ui32 x, y;
 	a3ui32 width, height;
-	a3_UI_Static_Text_Description text_descr;
 	a3_UI_Atlas_Coords coords;
+	a3vec3 color_hover;
+	a3vec3 color_click;
+	a3vec3 color;
 } a3_UI_Button_Description;
 
 typedef struct a3_UI_Button {
 	a3ui32 x, y;
 	a3ui32 width, height;
 	a3_UI_Quad* quad;
+	a3boolean pressed;
+	a3boolean held;
+	a3vec3 color_hover;
+	a3vec3 color_click;
+	a3vec3 color;
 } a3_UI_Button;
+
+typedef struct a3_UI_Checkbox_Descriptor {
+	a3ui32 x, y;
+	a3ui32 size;
+	a3_UI_Atlas_Coords box_coords;
+} a3_UI_Checkbox_Descriptor;
 
 typedef struct a3_UI_Checkbox {
 	a3_UI_Button* button;
@@ -213,8 +142,9 @@ void a3_UI_layoutAddButton(a3_UI_Layout* layout, a3_UI_Button** out, a3_UI_Butto
 void a3_UI_layoutAddStaticText(a3_UI_Layout* layout, a3_UI_Static_Text_Description description);
 void a3_UI_layoutAddQuad(a3_UI_Layout* layout, a3_UI_Quad** out, a3_UI_Quad quad);
 void a3_UI_layoutAddCharQuad(a3_UI_Layout* layout, a3_UI_Quad quad);
+void a3_UI_layoutAddCheckbox(a3_UI_Layout* layout, a3_UI_Checkbox** out, a3_UI_Checkbox_Descriptor descr);
 
-void a3_UI_layoutUpdateBuffers(a3_DemoState* demoState, a3_UI_Layout* layout);
-
+void a3_UI_drawLayout(a3_DemoState* demoState, a3_UI_Layout* layout);
+void a3_UI_updateLayout(a3_DemoState* demoState, a3_UI_Layout* layout);
 
 #endif

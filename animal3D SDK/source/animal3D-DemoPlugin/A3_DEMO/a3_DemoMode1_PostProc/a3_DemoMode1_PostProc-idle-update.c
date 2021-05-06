@@ -140,6 +140,13 @@ void a3postproc_update(a3_DemoState* demoState, a3_DemoMode1_PostProc* demoMode,
 
 	// prepare and upload graphics data
 	a3postproc_update_graphics(demoState, demoMode);
+
+
+	if (demoState->btn_next_rend_mode->pressed)
+		a3demoCtrlIncLoop(demoMode->renderMode, postproc_renderMode_max);
+
+	if (demoState->btn_prev_rend_mode->pressed)
+		a3demoCtrlDecLoop(demoMode->renderMode, postproc_renderMode_max);
 }
 
 
