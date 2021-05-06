@@ -373,6 +373,15 @@ struct a3_DemoState
 		};
 	};
 
+
+	union {
+		a3_UI_Layout ui_layouts[10];
+		struct {
+			a3_UI_Layout
+				ui_layout_top[1];
+		};
+	};
+
 	//-------------------------------------------------------------------------
 	// the end
 };

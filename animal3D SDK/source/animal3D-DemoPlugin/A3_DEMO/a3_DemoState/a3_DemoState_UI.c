@@ -24,7 +24,7 @@ void a3_UI_loadFont(a3_DemoState* demoState);
 void a3_UI_loadSpriteCoords(a3_DemoState* demoState);
 
 
-void a3_UI_bufferDrawRects(a3_DemoState const* demoState, a3_UI_Draw_Rect* rects, a3ui32 count);
+void a3_UI_bufferDrawRects(a3_DemoState const* demoState, a3_UI_Quad* rects, a3ui32 count);
 void a3_UI_drawBufferedRects(a3_DemoState const* demoState, a3ui32 count, const a3_DemoStateShaderProgram* program, const a3_Texture* tex);
 
 a3_Screen_Rect a3demo_createScreenRect(a3ui32 width, a3ui32 height, a3ui32 x, a3ui32 y) {
@@ -74,15 +74,15 @@ void a3_UI_render(a3_DemoState* demoState) {
 
 	const a3_UI_Element_Manager* manager = &demoState->ui_elem_manager;
 
-	a3_UI_Draw_Rect* rect_buffer = malloc(sizeof(a3_UI_Draw_Rect) * manager->count);
+	a3_UI_Quad* rect_buffer = malloc(sizeof(a3_UI_Quad) * manager->count);
 	if (rect_buffer == 0) return;
-	a3_UI_Draw_Rect* rect = rect_buffer;
+	a3_UI_Quad* rect = rect_buffer;
 
 	const a3_UI_Element* elem = manager->elements;
 	const a3_UI_Element* end = elem + manager->count;
 
 	for (; elem < end; elem++, rect++) {
-		*rect = (a3_UI_Draw_Rect){
+		*rect = (a3_UI_Quad){
 			.pos = (a3vec2){(a3real)elem->x, (a3real)elem->y},
 			.scale = (a3vec2){(a3real)elem->width, (a3real)elem->height},
 			.coords = elem->coords,
@@ -230,7 +230,7 @@ void a3demo_loadUIVertexArray(a3_DemoState* demoState) {
 		{  1.0f,   1.0f }
 	};
 	a3bufferCreate(demoState->vbo_ui_quad, "vbo:ui_quad", a3buffer_vertex, sizeof(vertices), vertices);
-	a3bufferCreate(demoState->vbo_ui_instances, "vbo:ui_instances", a3buffer_vertex, 200 * sizeof(a3_UI_Draw_Rect), NULL);
+	a3bufferCreate(demoState->vbo_ui_instances, "vbo:ui_instances", a3buffer_vertex, 200 * sizeof(a3_UI_Quad), NULL);
 
 	a3_VertexFormatDescriptor format[1] = { 0 };
 	a3_VertexAttributeDescriptor attrib[16] = { 0 };
@@ -268,9 +268,9 @@ void a3demo_loadUIVertexArray(a3_DemoState* demoState) {
 
 }
 
-void a3_UI_bufferDrawRects(a3_DemoState const* demoState, a3_UI_Draw_Rect* rects, a3ui32 count) {
+void a3_UI_bufferDrawRects(a3_DemoState const* demoState, a3_UI_Quad* rects, a3ui32 count) {
 	glBindBuffer(GL_ARRAY_BUFFER, demoState->vbo_ui_instances->handle->handle);
-	glBufferData(GL_ARRAY_BUFFER, count * sizeof(a3_UI_Draw_Rect), rects, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, count * sizeof(a3_UI_Quad), rects, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -302,7 +302,7 @@ void a3demo_drawText(const a3_DemoState* demoState, a3real base_x, a3real base_y
 
 	a3ui32 text_len = min(((a3ui32)strlen(text)), 200);
 
-	a3_UI_Draw_Rect rects[200];
+	a3_UI_Quad rects[200];
 
 	a3ui32 space_width = 40;
 
@@ -341,7 +341,7 @@ void a3demo_drawText(const a3_DemoState* demoState, a3real base_x, a3real base_y
 		a3real2MulS(scale.v, font_scale);
 		a3real2MulS(pos.v, font_scale);
 
-		rects[rect_index] = (a3_UI_Draw_Rect){
+		rects[rect_index] = (a3_UI_Quad){
 			.coords = ui_char.coords,
 			.pos = pos,
 			.scale = scale,
@@ -355,4 +355,83 @@ void a3demo_drawText(const a3_DemoState* demoState, a3real base_x, a3real base_y
 	a3_UI_bufferDrawRects(demoState, rects, rect_index);
 
 	a3_UI_drawBufferedRects(demoState, rect_index, demoState->prog_drawText, demoState->tex_font);
+}
+
+
+/*
+* LAYOUT STUFF
+*
+*/
+
+void a3_UI_layoutAddButton(a3_UI_Layout* layout, a3_UI_Button** out, a3_UI_Button_Description descr) {
+	a3_UI_Quad quad = (a3_UI_Quad){
+		.pos = (a3vec2){ (a3real)descr.x, (a3real)descr.y },
+		.scale = (a3vec2){ (a3real)descr.width, (a3real)descr.height},
+		.coords = descr.coords
+	};
+
+	a3_UI_layoutAddQuad(layout, out, quad);
+	a3_UI_layoutAddStaticText(layout, descr.text_descr);
+}
+
+void a3_UI_layoutAddStaticText(a3_UI_Layout* layout, a3_UI_Static_Text_Description descr) {
+	a3ui32 text_len = min(((a3ui32)strlen(descr.text)), 200);
+	a3real space_width = 40 * descr.size;
+
+	a3real x_pos = descr.x;
+	a3real y_pos = descr.y;
+
+
+	for (a3ui32 i = 0; i < text_len; i++) {
+
+		a3ui8 c = descr.text[i];
+
+		if (c == 32) { // space 
+			x_pos += space_width;
+			continue;
+		}
+		// make any characters we cant handle a ?
+		if (c < A3_UI_CHAR_START && c > A3_UI_CHAR_END) {
+			c = '?';
+		}
+		// TODO: might want to handle newlines and stuff
+
+		a3ui8 index = c - A3_UI_CHAR_START;
+		if (index >= A3_UI_CHAR_COUNT) continue;
+		a3_UI_Char ui_char = descr.font_chars[index];
+
+
+		a3vec2 pos = (a3vec2){
+			x_pos + (float)ui_char.left,
+			y_pos - (float)ui_char.top
+		};
+		a3vec2 scale = (a3vec2){
+			(float)ui_char.width,
+			(float)ui_char.height
+		};
+
+		a3real2MulS(scale.v, descr.size);
+		a3real2MulS(pos.v, descr.size);
+
+		a3_UI_Quad quad = (a3_UI_Quad){
+			.coords = ui_char.coords,
+			.pos = pos,
+			.scale = scale,
+		};
+
+		a3_UI_layoutAddCharQuad(layout, quad);
+
+		x_pos += (a3real)ui_char.advance;
+	}
+}
+
+void a3_UI_layoutAddCharQuad(a3_UI_Layout* layout, a3_UI_Quad quad) {
+	if (layout->text_quad_count >= A3_UI_LAYOUT_MAX_QUADS) return;
+	layout->text_quads[layout->text_quad_count] = quad;
+	layout->text_quad_count++;
+}
+
+void a3_UI_layoutAddQuad(a3_UI_Layout* layout, a3_UI_Quad** out, a3_UI_Quad quad) {
+
+	layout->quads
 }

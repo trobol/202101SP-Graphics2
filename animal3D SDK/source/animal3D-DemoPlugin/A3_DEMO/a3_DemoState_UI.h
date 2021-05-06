@@ -49,12 +49,12 @@ typedef struct a3_Screen_Rect {
 	a3_Framebuffer buffer;
 } a3_Screen_Rect;
 
-typedef struct a3_UI_Draw_Rect {
+typedef struct a3_UI_Quad {
 	a3vec2 pos;
 	a3vec2 scale;
 	a3_UI_Atlas_Coords coords;
 	a3vec3 color;
-} a3_UI_Draw_Rect;
+} a3_UI_Quad;
 
 
 
@@ -150,5 +150,71 @@ typedef struct a3_UI_Element_Textbox {
 typedef struct a3_UI_Element_Checkbox {
 	a3boolean checked;
 } a3_UI_Element_Checkbox;
+
+typedef struct a3_UI_Dynamic_Text {
+	const char* text;
+	a3real size;
+	a3ui32 x, y;
+} a3_UI_Dynamic_Text;
+
+typedef struct a3_UI_Static_Text_Description {
+	a3ui32 x, y;
+	a3ui32 width, height;
+	a3real size;
+	const char* text;
+	const a3_UI_Char* font_chars;
+} a3_UI_Static_Text_Description;
+
+
+
+typedef struct a3_UI_Button_Description {
+	a3ui32 x, y;
+	a3ui32 width, height;
+	a3_UI_Static_Text_Description text_descr;
+	a3_UI_Atlas_Coords coords;
+} a3_UI_Button_Description;
+
+typedef struct a3_UI_Button {
+	a3ui32 x, y;
+	a3ui32 width, height;
+	a3_UI_Quad* quad;
+} a3_UI_Button;
+
+typedef struct a3_UI_Checkbox {
+	a3_UI_Button* button;
+	a3_UI_Quad* checkmark;
+	a3boolean checked;
+} a3_UI_Checkbox;
+
+
+#define A3_UI_LAYOUT_MAX_QUADS 2048
+#define A3_UI_LAYOUT_MAX_ITEMS 100
+
+typedef struct a3_UI_Layout {
+	a3ui32 x, y;
+
+	a3ui32 quad_count;
+	a3_UI_Quad quads[A3_UI_LAYOUT_MAX_QUADS];
+
+	a3ui32 text_quad_count;
+	a3_UI_Quad text_quads[A3_UI_LAYOUT_MAX_QUADS];
+
+	a3ui32 dynamic_text_count;
+	a3_UI_Dynamic_Text dynamic_text[A3_UI_LAYOUT_MAX_ITEMS];
+
+	a3ui32 button_count;
+	a3_UI_Button buttons[A3_UI_LAYOUT_MAX_ITEMS];
+
+	a3ui32 checkbox_count;
+	a3_UI_Checkbox checkboxes[A3_UI_LAYOUT_MAX_ITEMS];
+} a3_UI_Layout;
+
+void a3_UI_layoutAddButton(a3_UI_Layout* layout, a3_UI_Button** out, a3_UI_Button_Description description);
+void a3_UI_layoutAddStaticText(a3_UI_Layout* layout, a3_UI_Static_Text_Description description);
+void a3_UI_layoutAddQuad(a3_UI_Layout* layout, a3_UI_Quad** out, a3_UI_Quad quad);
+void a3_UI_layoutAddCharQuad(a3_UI_Layout* layout, a3_UI_Quad quad);
+
+void a3_UI_layoutUpdateBuffers(a3_DemoState* demoState, a3_UI_Layout* layout);
+
 
 #endif
