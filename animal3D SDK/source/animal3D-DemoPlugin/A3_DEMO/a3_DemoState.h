@@ -375,7 +375,9 @@ struct a3_DemoState
 		* btn_next_demo_mode,
 		* btn_prev_demo_mode,
 		* btn_next_rend_mode,
-		* btn_prev_rend_mode;
+		* btn_prev_rend_mode,
+		* btn_font_size_inc,
+		* btn_font_size_dec;
 
 
 	//-------------------------------------------------------------------------

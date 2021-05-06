@@ -225,8 +225,8 @@ void a3demo_drawText(const a3_DemoState* demoState, a3real base_x, a3real base_y
 
 
 		a3vec2 pos = (a3vec2){
-			x_pos + (float)ui_char.left,
-			y_pos - (float)ui_char.top
+			x_pos + ((float)ui_char.left * font_scale),
+			y_pos - ((float)ui_char.top * font_scale)
 		};
 		a3vec2 scale = (a3vec2){
 			(float)ui_char.width,
@@ -234,7 +234,6 @@ void a3demo_drawText(const a3_DemoState* demoState, a3real base_x, a3real base_y
 		};
 
 		a3real2MulS(scale.v, font_scale);
-		a3real2MulS(pos.v, font_scale);
 
 		rects[rect_index] = (a3_UI_Quad){
 			.coords = ui_char.coords,
@@ -243,7 +242,7 @@ void a3demo_drawText(const a3_DemoState* demoState, a3real base_x, a3real base_y
 		};
 		rect_index++;
 
-		x_pos += (a3real)ui_char.advance;
+		x_pos += (a3real)ui_char.advance * font_scale;
 	}
 
 

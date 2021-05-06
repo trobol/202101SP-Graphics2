@@ -275,52 +275,14 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
 
+	// enable alpha
+	a3demo_enableCompositeBlending();
 
 
-	glEnable(GL_BLEND);
-
-	a3vertexDrawableActivate(demoState->draw_unit_plane_z);
-	/*
-	currentDemoProgram = demoState->prog_drawRect;
-	a3shaderProgramActivate(currentDemoProgram->program);
-	a3textureActivate(demoState->tex_text, a3tex_unit00);
-	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
-	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
-	a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
-	a3vertexDrawableRenderActive();
-	*/
-	/*
-	currentDemoProgram = demoState->prog_drawText;
-	a3shaderProgramActivate(currentDemoProgram->program);
-	a3textureActivate(demoState->tex_text, a3tex_unit00);
-	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
-	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
-	a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
-	a3vertexDrawableRenderActive();
-	*/
-
-
-
-	currentDemoProgram = demoState->prog_drawRect;
-	a3shaderProgramActivate(currentDemoProgram->program);
-
-	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
-	a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
-	a3textureActivate(demoState->tex_font, a3tex_unit00);
 
 	glDrawBuffer(GL_BACK);
-	a3demo_drawText(demoState, 100, 200, 1, "hello there");
-	//a3vertexDrawableRenderActive();
+	a3demo_drawText(demoState, 100, 200, demoMode->font_size, "hello world");
 
-	//a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
-	//a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uAtlas, 1, a3mat4_identity.mm);
-	//a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_one.v);
-	//glDrawBuffer(GL_BACK);
-	//a3demo_render_UI(&demoState->ui_controller);
-
-
-	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
 
 
 	//-------------------------------------------------------------------------
@@ -328,8 +290,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	//	- disable depth testing
 	//	- draw overlays appropriately
 
-	// enable alpha
-	a3demo_enableCompositeBlending();
+
 
 	// scene overlays
 	if (demoState->displayGrid || demoState->displayTangentBases || demoState->displayWireframe)

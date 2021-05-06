@@ -100,6 +100,11 @@ void a3intro_update(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode, a3f64
 	// prepare and upload graphics data
 	a3intro_update_graphics(demoState, demoMode);
 
+	if (demoState->btn_font_size_dec->pressed)
+		a3demoCtrlDecCap(demoMode->font_size, 1);
+
+	if (demoState->btn_font_size_inc->pressed)
+		a3demoCtrlIncCap(demoMode->font_size, 100);
 
 	if (demoState->btn_next_rend_mode->pressed)
 		a3demoCtrlIncLoop(demoMode->renderMode, intro_renderMode_max);

@@ -1115,6 +1115,7 @@ void a3demo_loadUILayouts(a3_DemoState* demoState) {
 	a3demo_addButton(demoState, 50, 100, "prev", &demoState->btn_prev_rend_mode);
 	a3demo_addButton(demoState, 250, 100, "next", &demoState->btn_next_rend_mode);
 
+
 	a3_UI_Checkbox_Descriptor checkbox_dscr = (a3_UI_Checkbox_Descriptor){
 		.x = 2820,
 		.y = 200,
@@ -1126,6 +1127,9 @@ void a3demo_loadUILayouts(a3_DemoState* demoState) {
 	a3_UI_layoutAddCheckbox(demoState->ui_layout, &checkbox_out, checkbox_dscr);
 
 
+	a3demo_addLabel(demoState, 100, 150, "TEXT SIZE");
+	a3demo_addButton(demoState, 50, 190, "-", &demoState->btn_font_size_dec);
+	a3demo_addButton(demoState, 250, 190, "+", &demoState->btn_font_size_inc);
 }
 
 

@@ -119,6 +119,8 @@ struct a3_DemoMode0_Intro
 	//	// (no components)
 	//};
 	a3_PointLightData pointLightData[introMaxCount_pointLight];
+
+	a3real font_size;
 };
 
 
