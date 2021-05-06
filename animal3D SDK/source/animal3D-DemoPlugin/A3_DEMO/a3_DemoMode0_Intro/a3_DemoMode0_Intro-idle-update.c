@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoMode0_Intro-idle-update.c
 	Demo mode implementations: animation scene.
 
@@ -99,6 +99,8 @@ void a3intro_update(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode, a3f64
 
 	// prepare and upload graphics data
 	a3intro_update_graphics(demoState, demoMode);
+
+	a3_UI_update(demoState);
 }
 
 

@@ -349,6 +349,13 @@ struct a3_DemoState
 
 	a3_UI_Char ui_characters[A3_UI_CHAR_COUNT];
 
+	a3_UI_Element_Manager ui_elem_manager;
+
+
+	a3_UI_Element_Type ui_checkbox[1];
+	a3_UI_Element_Type ui_textbox[1];
+	a3_UI_Element_Type ui_hoverbox[1];
+
 
 
 	//-------------------------------------------------------------------------

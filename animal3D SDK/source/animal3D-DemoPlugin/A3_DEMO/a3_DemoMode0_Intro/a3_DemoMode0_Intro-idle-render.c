@@ -280,7 +280,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 	glAlphaFunc(GL_GREATER, 0.5f);
 	glEnable(GL_ALPHA_TEST);
-
+	glEnable(GL_BLEND);
 
 	a3vertexDrawableActivate(demoState->draw_unit_plane_z);
 	/*
@@ -302,6 +302,8 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	a3vertexDrawableRenderActive();
 	*/
 
+	a3_UI_render(demoState);
+
 	currentDemoProgram = demoState->prog_drawRect;
 	a3shaderProgramActivate(currentDemoProgram->program);
 
@@ -310,7 +312,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	a3textureActivate(demoState->tex_font, a3tex_unit00);
 
 	glDrawBuffer(GL_BACK);
-	a3demo_drawText(demoState, 0, 0, "hello there");
+	a3demo_drawText(demoState, 100, 200, 1, "hello there");
 	//a3vertexDrawableRenderActive();
 
 	//a3shaderUniformSendFloatMat(a3unif_mat4, 0, currentDemoProgram->uMVP, 1, fsq.mm);
@@ -321,6 +323,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 
 
 	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
 
 
 	//-------------------------------------------------------------------------

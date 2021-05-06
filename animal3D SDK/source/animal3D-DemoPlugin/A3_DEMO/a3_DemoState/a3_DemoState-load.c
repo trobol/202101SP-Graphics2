@@ -363,64 +363,7 @@ void a3demo_loadGeometry(a3_DemoState* demoState)
 
 void a3demo_loadUI(a3_DemoState* demoState) {
 
-	a3ui32 tex_width = demoState->tex_font->width;
-	a3ui32 tex_height = demoState->tex_font->height;
-
-	FILE* fp = fopen(A3_DEMO_RES_DIR"font_data.txt", "r");
-	if (!fp) {
-		printf("failed to open font data\n");
-		return;
-	}
-
-	a3ui32 i, char_index;
-
-	for (i = 0, char_index = A3_UI_CHAR_START; i < A3_UI_CHAR_COUNT; i++, char_index++) {
-		a3ui32 n;
-		a3ui32 x, y;
-		a3ui32 width, height;
-		a3ui32 left, top;
-		a3ui32 advance;
-
-		int ret = fscanf(fp, "%i %i %i %i %i %i %i %i\n",
-			&n, &x, &y, &width, &height, &left, &top, &advance);
-		if (ret != 8) {
-			printf("failed to parse font data: read %i ints\n", i);
-			return;
-		}
-		if (n != char_index) {
-			printf("failed to parse font data: tried to read %i but got %i\n", char_index, n);
-			return;
-		}
-
-		// convert coordinates to opengl tex coords
-		a3real norm_x = (float)x / (float)tex_width;
-		a3real norm_y = (float)y / (float)tex_height;
-		a3vec2 coords = (a3vec2){
-			.x = norm_x,
-			.y = 1.0f - norm_y
-		};
-		a3real norm_scale_y = (float)height / (float)tex_height;
-		a3vec2 scale = (a3vec2){
-			.x = (float)width / (float)tex_width,
-			.y = -norm_scale_y
-		};
-
-		demoState->ui_characters[i] = (a3_UI_Char){
-			.tex_coords = coords,
-			.tex_scale = scale,
-			.width = width,
-			.height = height,
-			.left = left,
-			.top = top,
-			.advance = advance
-		};
-
-	}
-
-	fclose(fp);
-
-
-	a3demo_loadUIVertexArray(demoState);
+	a3_UI_load(demoState);
 }
 
 
@@ -926,7 +869,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 
 	a3textureActivate(demoState->tex_font, a3tex_unit00);
 	a3textureChangeFilterMode(a3tex_filterLinear); // linear pixel blending
-	a3textureChangeRepeatMode(a3tex_repeatNormal, a3tex_repeatClamp); // repeat horizontal, clamp vertical
+	a3textureChangeRepeatMode(a3tex_repeatClamp, a3tex_repeatClamp); //  clamp both axes
 
 	// done
 	a3textureDeactivate(a3tex_unit00);

@@ -38,20 +38,20 @@
 
 void a3intro_loadValidate(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode)
 {
-	void a3intro_input(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode, a3f64 const dt);
-	void a3intro_update(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode, a3f64 const dt);
+	void a3intro_input(a3_DemoState * demoState, a3_DemoMode0_Intro * demoMode, a3f64 const dt);
+	void a3intro_update(a3_DemoState * demoState, a3_DemoMode0_Intro * demoMode, a3f64 const dt);
 	void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* demoMode, a3f64 const dt);
-	void a3intro_input_keyCharPress(a3_DemoState const* demoState, a3_DemoMode0_Intro* demoMode, a3i32 const asciiKey, a3i32 const state);
-	void a3intro_input_keyCharHold(a3_DemoState const* demoState, a3_DemoMode0_Intro* demoMode, a3i32 const asciiKey, a3i32 const state);
+	void a3intro_input_keyCharPress(a3_DemoState const* demoState, a3_DemoMode0_Intro * demoMode, a3i32 const asciiKey, a3i32 const state);
+	void a3intro_input_keyCharHold(a3_DemoState const* demoState, a3_DemoMode0_Intro * demoMode, a3i32 const asciiKey, a3i32 const state);
 
 	// initialize callbacks
 	a3_DemoModeCallbacks* const callbacks = demoState->demoModeCallbacks + demoState_modeIntro;
-	callbacks->demoMode =		demoMode;
-	callbacks->handleInput =	(a3_DemoMode_EventCallback)a3intro_input;
-	callbacks->handleUpdate =	(a3_DemoMode_EventCallback)a3intro_update;
-	callbacks->handleRender =	(a3_DemoMode_EventCallback)a3intro_render;
+	callbacks->demoMode = demoMode;
+	callbacks->handleInput = (a3_DemoMode_EventCallback)a3intro_input;
+	callbacks->handleUpdate = (a3_DemoMode_EventCallback)a3intro_update;
+	callbacks->handleRender = (a3_DemoMode_EventCallback)a3intro_render;
 	callbacks->handleKeyPress = (a3_DemoMode_InputCallback)a3intro_input_keyCharPress;
-	callbacks->handleKeyHold =	(a3_DemoMode_InputCallback)a3intro_input_keyCharHold;
+	callbacks->handleKeyHold = (a3_DemoMode_InputCallback)a3intro_input_keyCharHold;
 
 	// initialize scene object pointers
 	a3demo_initSceneObject(demoMode->objgroup_world_root, 0,
@@ -94,7 +94,7 @@ void a3intro_loadValidate(a3_DemoState* demoState, a3_DemoMode0_Intro* demoMode)
 
 void a3intro_load(a3_DemoState const* demoState, a3_DemoMode0_Intro* demoMode)
 {
-	a3_SceneObjectComponent const* sceneObject = 0, *sceneObject_parent = 0;
+	a3_SceneObjectComponent const* sceneObject = 0, * sceneObject_parent = 0;
 	a3_SceneObjectData* sceneObjectData = 0;
 
 	a3_ProjectorComponent const* projector = 0;
@@ -280,6 +280,9 @@ void a3intro_load(a3_DemoState const* demoState, a3_DemoMode0_Intro* demoMode)
 	pointLightData->color.r = a3real_half;
 	pointLightData->color.g = a3real_half;
 	a3demo_setPointLightRadius(pointLightData, a3real_sixty);
+
+
+
 }
 
 
