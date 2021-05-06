@@ -58,21 +58,14 @@ typedef struct a3_UI_Draw_Rect {
 
 
 
-void a3_UI_update(a3_DemoState const* demoState);
-void a3_UI_render(a3_DemoState const* demoState);
+void a3_UI_update(a3_DemoState* demoState);
+void a3_UI_render(a3_DemoState* demoState);
 
 void a3_UI_load(a3_DemoState* demoState);
 
 a3_Screen_Rect a3demo_createScreenRect(a3ui32 width, a3ui32 height, a3ui32 x, a3ui32 y);
-void a3demo_render_UI_rects(const a3_DemoState* demoState, const a3_UI_Draw_Rect* rects, a3ui32 count);
 
-void a3demo_drawRect(const a3_DemoState* demoState, a3_UI_SpriteID sprite_id, a3ui32 x, a3ui32 y, a3ui32 width, a3ui32 height);
 void a3demo_drawText(const a3_DemoState* demoState, a3real x, a3real y, a3real font_scale, const char* text);
-
-void a3demo_drawUI(const a3_DemoState* demoState);
-
-void a3demo_loadFontData(a3_DemoState* demoState);
-void a3demo_load_UI(a3_DemoState* demoState);
 
 
 /*
@@ -96,7 +89,7 @@ void a3demo_loadUIVertexArray(a3_DemoState* demoState);
 
 typedef struct a3_UI_Element a3_UI_Element;
 
-typedef void (*a3_UI_Element_VTable_Entry)(a3_DemoState const* demoState, a3_UI_Element const* elem);
+typedef void (*a3_UI_Element_VTable_Entry)(a3_DemoState* demoState, a3_UI_Element* elem);
 
 typedef enum a3_UI_Element_VTable_Index {
 	A3_UI_ELEMENT_VTABLE_UPDATE,
@@ -146,8 +139,8 @@ a3_UI_Element* a3_UI_addElement(a3_DemoState* demoState, const a3_UI_Element_Typ
 typedef struct a3_UI_Element_Textbox a3_UI_Element_Textbox;
 typedef struct a3_UI_Element_Checkbox a3_UI_Element_Checkbox;
 
-void a3_UI_Element_update(a3_DemoState const* demoState, a3_UI_Element const* elem);
-void a3_UI_Element_render(a3_DemoState const* demoState, a3_UI_Element const* elem);
+void a3_UI_Element_update(a3_DemoState* demoState, a3_UI_Element* elem);
+void a3_UI_Element_render(a3_DemoState* demoState, a3_UI_Element* elem);
 
 typedef struct a3_UI_Element_Textbox {
 	const char* text;

@@ -302,7 +302,7 @@ void a3intro_render(a3_DemoState const* demoState, a3_DemoMode0_Intro const* dem
 	a3vertexDrawableRenderActive();
 	*/
 
-	a3_UI_render(demoState);
+
 
 	currentDemoProgram = demoState->prog_drawRect;
 	a3shaderProgramActivate(currentDemoProgram->program);

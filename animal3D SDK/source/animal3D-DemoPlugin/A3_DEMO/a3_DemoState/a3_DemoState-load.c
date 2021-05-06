@@ -804,7 +804,8 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 				texChecker[1];
 
 			a3_DemoStateTexture
-				texText[1];
+				texText[1],
+				texUISprites[1];
 		};
 	} textureList = {
 		{
@@ -828,6 +829,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 			{ demoState->tex_testsprite,	"tex:testsprite",	A3_DEMO_TEX"sprite/spriteTest8x8.png" },
 			{ demoState->tex_checker,		"tex:checker",		A3_DEMO_TEX"sprite/checker.png" },
 			{ demoState->tex_font,			"tex:font",			A3_DEMO_TEX"font.bmp" },
+			{ demoState->tex_ui_sprites,	"tex:ui-sprites",	A3_DEMO_TEX"ui_sprites.png" },
 		}
 	};
 	const a3ui32 numTextures = sizeof(textureList) / sizeof(a3_DemoStateTexture);
@@ -867,8 +869,14 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 		a3textureChangeRepeatMode(a3tex_repeatClamp, a3tex_repeatClamp); // clamp both axes
 	}
 
+
+	// ui texture settings
 	a3textureActivate(demoState->tex_font, a3tex_unit00);
 	a3textureChangeFilterMode(a3tex_filterLinear); // linear pixel blending
+	a3textureChangeRepeatMode(a3tex_repeatClamp, a3tex_repeatClamp); //  clamp both axes
+
+	a3textureActivate(demoState->tex_ui_sprites, a3tex_unit00);
+	a3textureChangeFilterMode(a3tex_filterNearest); // linear pixel blending
 	a3textureChangeRepeatMode(a3tex_repeatClamp, a3tex_repeatClamp); //  clamp both axes
 
 	// done

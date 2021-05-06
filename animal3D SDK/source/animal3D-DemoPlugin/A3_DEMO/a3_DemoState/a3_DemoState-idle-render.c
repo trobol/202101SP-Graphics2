@@ -17,7 +17,7 @@
 /*
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
-	
+
 	a3_DemoState_idle-render.c/.cpp
 	Demo state function implementations.
 
@@ -204,12 +204,16 @@ void a3demo_render(a3_DemoState* demoState, a3f64 const dt)
 			demoState->demoModeCallbacksPtr->demoMode, dt);
 	}
 
+	a3framebufferDeactivateSetViewport(a3fbo_depthDisable, 0, 0, demoState->windowWidth, demoState->windowHeight);
+
+	a3_UI_render(demoState);
 
 	// deactivate things
 	a3vertexDrawableDeactivate();
 	a3shaderProgramDeactivate();
-	a3framebufferDeactivateSetViewport(a3fbo_depthDisable, 0, 0, demoState->windowWidth, demoState->windowHeight);
+
 	a3textureDeactivate(a3tex_unit00);
+
 
 
 	// text

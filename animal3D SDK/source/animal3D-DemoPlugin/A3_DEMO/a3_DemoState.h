@@ -312,7 +312,8 @@ struct a3_DemoState
 				tex_ramp_sm[1],
 				tex_testsprite[1],
 				tex_checker[1],
-				tex_font[1];
+				tex_font[1],
+				tex_ui_sprites[1];
 		};
 	};
 
@@ -352,11 +353,25 @@ struct a3_DemoState
 	a3_UI_Element_Manager ui_elem_manager;
 
 
-	a3_UI_Element_Type ui_checkbox[1];
-	a3_UI_Element_Type ui_textbox[1];
-	a3_UI_Element_Type ui_hoverbox[1];
+	a3_UI_Element_Type
+		ui_checkbox[1],
+		ui_textbox[1],
+		ui_hoverbox[1];
 
+	union {
 
+		a3_UI_Atlas_Coords ui_atlas_coords[4 * 4];
+		struct {
+			a3_UI_Atlas_Coords
+				ui_atlas_check,
+				ui_atlas_box,
+				ui_atlas_circle,
+				ui_atlas_box_round,
+
+				ui_atlas_box_outline,
+				ui_atlas_indent_box;
+		};
+	};
 
 	//-------------------------------------------------------------------------
 	// the end

@@ -32,7 +32,7 @@ void main()
 	vTexcoord_atlas = vec4(aTexcoord_start + (texSpacePos * aTexcoord_size), 0, 0);
 	vColor = aColor;
 	//vTexcoord_atlas = vec4(aPosition, 0, 0);
-	vec2 pos = aPos + 200 + (aPosition * aSize);
+	vec2 pos = aPos + (aPosition * aSize);
 
 	gl_Position = uP * vec4(pos, 0, 1);
 
